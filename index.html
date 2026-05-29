@@ -347,7 +347,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
         <b>Bônus</b><br>
         • Bater 12/dia = <b>+50 XP</b><br>
         • 5 dias seguidos = <b>+150 XP</b><br>
-        • Semana perfeita (60 contatos) = <b>+100 XP extra</b><br><br>
+
         <b>Penalidades</b><br>
         • Não bater meta = <b>−60% do potencial</b><br>
         • Sequência zerada a cada dia perdido<br>
@@ -377,7 +377,7 @@ const firebaseConfig = {
 const ADMIN_UID = "ff6QoTu1xtciUC44iQt96j2X5gx1";
 
 const DAILY_GOAL = 12;
-const WEEKLY_GOAL = 60;
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -682,7 +682,7 @@ function checkBonus(prevTotal){
     bonusDesc='🎯 Meta do dia atingida!';
     if(userState.streak%5===0){bonus+=150;bonusDesc=`🔥 ${userState.streak} dias seguidos!`;}
   }
-  if((userState.weeklyTotal||0)===WEEKLY_GOAL){bonus+=100;bonusDesc='🏆 Semana perfeita!';}
+
   return{bonus,bonusDesc};
 }
 
