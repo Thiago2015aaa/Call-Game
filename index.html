@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f0f0f">
 <title>Call Game — ELO Tracker</title>
 <style>
-:root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#222;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.18);--text:#f0f0f0;--text2:#999;--text3:#555;--green:#1DB954;--green-dark:#158a3e;--red:#E24B4A;--orange:#FF9800;--radius:12px;--radius-sm:8px}
+:root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#222;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.18);--text:#f0f0f0;--text2:#999;--text3:#555;--green:#1DB954;--green-dark:#158a3e;--red:#E24B4A;--orange:#FF9800;--blue:#2196F3;--radius:12px;--radius-sm:8px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}
 
@@ -19,18 +19,38 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .google-btn:hover{opacity:.9}
 .google-btn svg{width:20px;height:20px}
 
+/* NICKNAME MODAL */
+#nicknameModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center}
+#nicknameModal.show{display:flex}
+.modal-box{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:28px 24px;width:340px;max-width:90vw}
+.modal-title{font-size:18px;font-weight:600;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.5}
+.modal-input{width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;font-size:15px;color:var(--text);font-family:inherit;outline:none;margin-bottom:12px}
+.modal-input:focus{border-color:rgba(255,255,255,.35)}
+.modal-btns{display:flex;gap:8px}
+.modal-confirm{flex:1;padding:12px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.modal-confirm:hover{background:var(--green-dark)}
+.modal-skip{padding:12px 16px;background:transparent;color:var(--text2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;cursor:pointer;font-family:inherit}
+
 /* LAYOUT */
 #appScreen{display:none;height:100vh;flex-direction:row}
 
 /* SIDEBAR */
 .sidebar{width:300px;flex-shrink:0;background:var(--bg2);border-right:0.5px solid var(--border2);display:flex;flex-direction:column;overflow:hidden}
-.sidebar-header{padding:20px 16px 12px;border-bottom:0.5px solid var(--border)}
+.sidebar-tabs{display:flex;border-bottom:0.5px solid var(--border)}
+.stab{flex:1;padding:12px 8px;text-align:center;font-size:12px;font-weight:500;cursor:pointer;color:var(--text2);background:none;border:none;font-family:inherit;border-bottom:2px solid transparent;transition:color .15s}
+.stab.on{color:var(--text);border-bottom-color:var(--green)}
+.spanel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.spanel.on{display:flex}
+
+/* RANKING */
+.sidebar-header{padding:14px 16px 10px;border-bottom:0.5px solid var(--border);flex-shrink:0}
 .sidebar-title{font-size:13px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:2px}
 .sidebar-sub{font-size:11px;color:var(--text3)}
 .lb-list{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:4px}
 .lb-list::-webkit-scrollbar{width:3px}
 .lb-list::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
-.lb-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--radius-sm);border:0.5px solid var(--border);background:var(--bg);transition:background .2s}
+.lb-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--radius-sm);border:0.5px solid var(--border);background:var(--bg)}
 .lb-row.me{border-color:rgba(255,255,255,.25);background:var(--bg3)}
 .lb-row.top1{border-color:rgba(255,215,0,.35);background:rgba(255,215,0,.04)}
 .lb-row.top2{border-color:rgba(192,192,192,.3)}
@@ -44,6 +64,34 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .lb-rank{font-size:10px;color:var(--text2)}
 .lb-xp{font-size:12px;font-weight:600;color:var(--green);flex-shrink:0}
 
+/* CHAT */
+.chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+.chat-messages::-webkit-scrollbar{width:3px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+.chat-msg{display:flex;flex-direction:column;gap:2px;max-width:85%}
+.chat-msg.mine{align-self:flex-end;align-items:flex-end}
+.chat-msg.theirs{align-self:flex-start;align-items:flex-start}
+.msg-meta{display:flex;align-items:center;gap:5px}
+.msg-avatar{width:18px;height:18px;border-radius:50%;object-fit:cover;background:var(--bg3);flex-shrink:0}
+.msg-name{font-size:10px;color:var(--text3)}
+.msg-bubble{padding:8px 11px;border-radius:12px;font-size:13px;line-height:1.5;word-break:break-word}
+.chat-msg.mine .msg-bubble{background:var(--green);color:#fff;border-bottom-right-radius:4px}
+.chat-msg.theirs .msg-bubble{background:var(--bg3);color:var(--text);border-bottom-left-radius:4px}
+.msg-system{text-align:center;font-size:11px;color:var(--text3);padding:4px 0}
+.msg-time{font-size:10px;color:var(--text3)}
+.chat-input-row{display:flex;gap:6px;padding:10px;border-top:0.5px solid var(--border);flex-shrink:0}
+.chat-input{flex:1;background:var(--bg3);border:0.5px solid var(--border2);border-radius:100px;padding:9px 14px;font-size:13px;color:var(--text);font-family:inherit;outline:none}
+.chat-input:focus{border-color:rgba(255,255,255,.3)}
+.chat-send{background:var(--green);color:#fff;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.chat-send:hover{background:var(--green-dark)}
+
+/* ADMIN PANEL */
+.admin-panel{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.admin-title{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:4px}
+.admin-btn{width:100%;padding:11px;border-radius:var(--radius-sm);border:0.5px solid var(--red);background:transparent;font-size:13px;cursor:pointer;font-family:inherit;color:var(--red);text-align:left}
+.admin-btn:hover{background:rgba(226,75,74,.08)}
+.admin-warn{font-size:11px;color:var(--text3);line-height:1.5}
+
 /* MAIN */
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 .main::-webkit-scrollbar{width:4px}
@@ -55,6 +103,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .user-info{display:flex;align-items:center;gap:8px}
 .user-avatar{width:30px;height:30px;border-radius:50%;background:var(--bg3);object-fit:cover}
 .user-name{font-size:13px;color:var(--text2)}
+.user-actions{display:flex;align-items:center;gap:10px}
+.nick-btn{font-size:11px;color:var(--text3);background:none;border:0.5px solid var(--border);border-radius:100px;cursor:pointer;font-family:inherit;padding:3px 10px}
+.nick-btn:hover{border-color:var(--border2);color:var(--text2)}
 .logout-btn{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:inherit}
 .rank-bar{display:flex;align-items:center;gap:14px;margin-bottom:12px}
 .rank-emblem{width:64px;height:64px;flex-shrink:0}
@@ -73,9 +124,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .xp-nums{display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 24px}
-.stat{background:var(--bg2);border-radius:var(--radius-sm);padding:12px 10px;text-align:center;border:0.5px solid var(--border)}
-.stat-val{font-size:30px;font-weight:700;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 24px}
+.stat{background:var(--bg2);border-radius:var(--radius-sm);padding:10px 8px;text-align:center;border:0.5px solid var(--border)}
+.stat-val{font-size:26px;font-weight:700;line-height:1}
 .stat-lbl{font-size:11px;color:var(--text2);margin-top:4px}
 .stat-meta{font-size:10px;color:var(--text3);margin-top:2px}
 
@@ -88,15 +139,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 /* CTA */
 .cta-section{padding:0 24px 14px;display:flex;flex-direction:column;gap:8px}
 .btn-row{display:flex;gap:8px}
-.big-btn{flex:1;padding:22px;border-radius:var(--radius);border:none;font-size:20px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;background:var(--green);transition:transform .1s,background .15s;user-select:none}
-.big-btn:hover{background:var(--green-dark)}
-.big-btn:active{transform:scale(0.98)}
-.undo-btn{width:64px;padding:22px 0;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg2);font-size:22px;cursor:pointer;font-family:inherit;color:var(--text2);transition:background .15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.undo-btn:hover{background:var(--bg3)}
-.undo-btn:active{transform:scale(0.97)}
-.undo-btn:disabled{opacity:.3;cursor:not-allowed}
-.miss-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:transparent;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text2)}
-.miss-btn:hover{background:var(--bg2)}
+.big-btn{flex:1;padding:18px;border-radius:var(--radius);border:none;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;color:#fff;transition:transform .1s,background .15s;user-select:none}
+.big-btn.green{background:var(--green)}.big-btn.green:hover{background:var(--green-dark)}
+.big-btn.blue{background:var(--blue)}.big-btn.blue:hover{background:#1565C0}
+.big-btn:active{transform:scale(0.97)}
+.remove-section{display:flex;gap:8px}
+.remove-btn{flex:1;padding:11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:transparent;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:6px}
+.remove-btn:hover:not(:disabled){background:var(--bg2)}
+.remove-btn:disabled{opacity:.3;cursor:not-allowed}
+.miss-btn{width:100%;padding:11px;border-radius:var(--radius-sm);border:0.5px solid rgba(226,75,74,.3);background:transparent;font-size:13px;cursor:pointer;font-family:inherit;color:var(--red)}
+.miss-btn:hover{background:rgba(226,75,74,.08)}
 
 /* TABS */
 .tabs{display:flex;gap:4px;padding:0 24px;margin-bottom:12px}
@@ -127,7 +179,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .pts-p{color:var(--green);font-weight:600}.pts-n{color:var(--red);font-weight:600}
 
 /* INFO */
-.info-box{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;font-size:13px;color:var(--text2);line-height:1.8}
+.info-box{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:12px}
 .info-box b{color:var(--text);font-weight:600}
 
 /* BANNER */
@@ -137,16 +189,31 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .banner.info{background:rgba(255,152,0,.15);border:0.5px solid rgba(255,152,0,.4);color:var(--orange)}
 
 .reset-link{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:inherit;display:block;text-align:center;padding:16px}
-.phone-icon{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.phone-icon{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .empty-txt{text-align:center;color:var(--text3);font-size:13px;padding:2rem 0}
-
+.section-sep{height:0.5px;background:var(--border);margin:0 24px 14px}
 .pop{animation:pop .2s ease}
 @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.chat-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);display:inline-block;margin-right:5px}
+.unread-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:100px;padding:1px 5px;margin-left:4px;display:none}
 </style>
 </head>
 <body>
+
+<!-- NICKNAME MODAL -->
+<div id="nicknameModal">
+  <div class="modal-box">
+    <div class="modal-title">Como quer ser chamado?</div>
+    <div class="modal-sub">Escolha um nickname para aparecer no ranking e no chat.</div>
+    <input class="modal-input" id="nicknameInput" type="text" placeholder="Ex: Thiago, T.Costa, TheGoat..." maxlength="20">
+    <div class="modal-btns">
+      <button class="modal-skip" onclick="saveNickname(true)">Pular</button>
+      <button class="modal-confirm" onclick="saveNickname(false)">Salvar</button>
+    </div>
+  </div>
+</div>
 
 <!-- LOGIN -->
 <div id="loginScreen">
@@ -163,14 +230,42 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 
 <!-- APP -->
 <div id="appScreen">
-
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-title"><span class="live-dot"></span>Ranking ao vivo</div>
-      <div class="sidebar-sub" id="playerCount">— jogadores</div>
+    <div class="sidebar-tabs">
+      <button class="stab on" onclick="switchSTab('ranking',this)">🏆 Ranking</button>
+      <button class="stab" onclick="switchSTab('chat',this)">💬 Chat <span class="unread-badge" id="unreadBadge">0</span></button>
+      <button class="stab" id="adminTabBtn" onclick="switchSTab('admin',this)" style="display:none">⚙️ Admin</button>
     </div>
-    <div class="lb-list" id="lbList"><div class="empty-txt">Carregando...</div></div>
+
+    <!-- RANKING PANEL -->
+    <div class="spanel on" id="spanel-ranking">
+      <div class="sidebar-header">
+        <div class="sidebar-title"><span class="live-dot"></span>Ranking ao vivo</div>
+        <div class="sidebar-sub" id="playerCount">— jogadores</div>
+      </div>
+      <div class="lb-list" id="lbList"><div class="empty-txt">Carregando...</div></div>
+    </div>
+
+    <!-- CHAT PANEL -->
+    <div class="spanel" id="spanel-chat">
+      <div class="chat-messages" id="chatMessages"><div class="empty-txt">Sem mensagens ainda.</div></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" type="text" placeholder="Mensagem..." maxlength="200" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div class="spanel" id="spanel-admin">
+      <div class="admin-panel">
+        <div class="admin-title">🔴 Painel Admin</div>
+        <div class="admin-warn">Ações irreversíveis. Use com cuidado.</div>
+        <button class="admin-btn" onclick="adminResetAll()">⟳ Resetar TODOS os jogadores</button>
+        <button class="admin-btn" onclick="adminClearChat()">🗑️ Limpar chat</button>
+        <button class="admin-btn" onclick="adminResetWeek()">📅 Resetar semana de todos</button>
+      </div>
+    </div>
   </div>
 
   <!-- MAIN -->
@@ -183,7 +278,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
           <img id="userAvatar" class="user-avatar" src="" alt="">
           <span id="userName" class="user-name"></span>
         </div>
-        <button class="logout-btn" onclick="doLogout()">Sair</button>
+        <div class="user-actions">
+          <button class="nick-btn" onclick="openNicknameModal()">✏️ Nick</button>
+          <button class="logout-btn" onclick="doLogout()">Sair</button>
+        </div>
       </div>
       <div class="rank-bar">
         <div class="rank-emblem" id="rEmblem"></div>
@@ -202,26 +300,35 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="stat-val" id="todayN">0</div><div class="stat-lbl">Hoje</div><div class="stat-meta">meta: 20</div></div>
-      <div class="stat"><div class="stat-val" id="weekN">0</div><div class="stat-lbl">Semana</div><div class="stat-meta">meta: 100</div></div>
-      <div class="stat"><div class="stat-val" id="streakN">0</div><div class="stat-lbl">🔥 Sequência</div><div class="stat-meta">dias</div></div>
+      <div class="stat"><div class="stat-val" id="todayN">0</div><div class="stat-lbl">Ligações</div><div class="stat-meta">hoje</div></div>
+      <div class="stat"><div class="stat-val" id="meetN">0</div><div class="stat-lbl">Reuniões</div><div class="stat-meta">hoje</div></div>
+      <div class="stat"><div class="stat-val" id="weekN">0</div><div class="stat-lbl">Semana</div><div class="stat-meta">meta: 60</div></div>
+      <div class="stat"><div class="stat-val" id="streakN">0</div><div class="stat-lbl">🔥 Streak</div><div class="stat-meta">dias</div></div>
     </div>
 
     <div class="prog-section">
-      <div class="prog-lbl"><span>Meta do dia</span><span id="progTxt">0 / 20</span></div>
+      <div class="prog-lbl"><span>Meta do dia</span><span id="progTxt">0 / 12</span></div>
       <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
     </div>
 
     <div class="cta-section">
       <div class="btn-row">
-        <button class="big-btn" id="mainBtn" onclick="doCall()">
+        <button class="big-btn green" id="callBtn" onclick="doCall()">
           <svg class="phone-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .4h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.19a16 16 0 006.29 6.29l1.13-1.14a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          Ligação realizada
+          Ligação <span style="font-size:12px;opacity:.7">+3 XP</span>
         </button>
-        <button class="undo-btn" id="undoBtn" onclick="undoCall()" title="Desfazer última ligação" disabled>↩</button>
+        <button class="big-btn blue" id="meetBtn" onclick="doMeeting()">
+          📅 Reunião <span style="font-size:12px;opacity:.7">+6 XP</span>
+        </button>
+      </div>
+      <div class="remove-section">
+        <button class="remove-btn" id="removeCallBtn" onclick="removeCall()" disabled>↩ Remover ligação</button>
+        <button class="remove-btn" id="removeMeetBtn" onclick="removeMeeting()" disabled>↩ Remover reunião</button>
       </div>
       <button class="miss-btn" onclick="missDay()">✕ &nbsp;Encerrar dia sem bater meta</button>
     </div>
+
+    <div class="section-sep"></div>
 
     <div class="tabs">
       <button class="tab on" onclick="sw('semana',this)">Semana</button>
@@ -230,33 +337,23 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
       <button class="tab" onclick="sw('hist',this)">Histórico</button>
     </div>
 
-    <div id="panel-semana" class="panel on">
-      <div class="week-grid" id="weekGrid"></div>
-    </div>
+    <div id="panel-semana" class="panel on"><div class="week-grid" id="weekGrid"></div></div>
     <div id="panel-ladder" class="panel"><div id="ladderEl"></div></div>
     <div id="panel-regras" class="panel">
       <div class="info-box">
-        <b>Ganhos de XP</b><br>
-        • Cada ligação = <b>+3 XP</b><br>
-        • Bater 20/dia = <b>+50 XP bônus</b><br>
-        • Sequência de 5 dias seguidos = <b>+150 XP</b><br>
-        • Semana perfeita (100 contatos) = <b>+100 XP bônus extra</b><br><br>
+        <b>Atividades</b><br>
+        • Ligação = <b>+3 XP</b> · conta 1 para a meta<br>
+        • Reunião = <b>+6 XP</b> · conta 1 para a meta<br><br>
+        <b>Bônus</b><br>
+        • Bater 12/dia = <b>+50 XP</b><br>
+        • 5 dias seguidos = <b>+150 XP</b><br>
+        • Semana perfeita (60 contatos) = <b>+100 XP extra</b><br><br>
         <b>Penalidades</b><br>
-        • Não bater meta = <b>−60% do potencial (~−80 XP)</b><br>
+        • Não bater meta = <b>−60% do potencial</b><br>
         • Sequência zerada a cada dia perdido<br>
-        • Rebaixamento automático se XP cair do piso<br><br>
-        <b>⟳ Botão desfazer</b><br>
-        Remove a última ligação registrada no dia atual.<br><br>
-        <b>Tempo estimado sendo consistente</b><br>
-        • Estagiário → Gerente Bancário: 1–2 semanas<br>
-        • Gerente Bancário → Assessor Novato: 1–2 meses<br>
-        • Assessor Novato → Assessor Prime: 2–4 meses<br>
-        • Assessor Prime → Assessor Exclusive: 4–6 meses<br>
-        • Assessor Exclusive → Assessor Referência: 6–9 meses<br>
-        • Assessor Referência → Assessor Maicão: 9–14 meses<br>
-        • Assessor Maicão → Assessor PRIVATE 🔥: 18+ meses
+        • Rebaixamento automático se XP cair do piso
       </div>
-      <button class="reset-link" onclick="if(confirm('Resetar todo o seu progresso?'))resetAll()">⟳ Resetar meu progresso</button>
+      <button class="reset-link" onclick="if(confirm('Resetar seu progresso?'))resetAll()">⟳ Resetar meu progresso</button>
     </div>
     <div id="panel-hist" class="panel"><div class="log" id="logEl"></div></div>
   </div>
@@ -265,7 +362,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, onSnapshot, addDoc, query, orderBy, limit, serverTimestamp, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCUooFBfuiCUW2-bop9lHTELGNt6J4q1QE",
@@ -276,6 +373,12 @@ const firebaseConfig = {
   appId: "1:684202435575:web:630c41981fabd56f3ac4f2"
 };
 
+// ⚠️ SUBSTITUA pelo seu UID real (veja em Firebase > Autenticação > Usuários)
+const ADMIN_UID = "ff6QoTu1xtciUC44iQt96j2X5gx1";
+
+const DAILY_GOAL = 12;
+const WEEKLY_GOAL = 60;
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -283,6 +386,10 @@ const db = getFirestore(app);
 let currentUser = null;
 let userState = null;
 let lbUnsub = null;
+let chatUnsub = null;
+let lastSeenMsgId = null;
+let unreadCount = 0;
+let chatVisible = false;
 
 // ── AUTH ──────────────────────────────────────────────
 window.loginGoogle = async () => {
@@ -292,6 +399,7 @@ window.loginGoogle = async () => {
 window.doLogout = async () => {
   if(!confirm('Sair?')) return;
   if(lbUnsub) lbUnsub();
+  if(chatUnsub) chatUnsub();
   await signOut(auth);
 };
 
@@ -301,10 +409,20 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appScreen').style.display = 'flex';
     document.getElementById('userAvatar').src = user.photoURL || '';
-    document.getElementById('userName').textContent = user.displayName?.split(' ')[0] || 'Usuário';
+
+    // Show admin tab if admin
+    if(user.uid === ADMIN_UID) {
+      document.getElementById('adminTabBtn').style.display = 'block';
+    }
+
     await loadState();
+    if(!userState.nickname) {
+      document.getElementById('nicknameModal').classList.add('show');
+    }
+    updateNameDisplay();
     render();
     startLeaderboard();
+    startChat();
   } else {
     currentUser = null;
     document.getElementById('loginScreen').style.display = 'flex';
@@ -312,23 +430,172 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+function updateNameDisplay() {
+  const name = userState.nickname || currentUser.displayName?.split(' ')[0] || 'Usuário';
+  document.getElementById('userName').textContent = name;
+}
+
+// ── NICKNAME ──────────────────────────────────────────
+window.openNicknameModal = () => {
+  document.getElementById('nicknameInput').value = userState.nickname || '';
+  document.getElementById('nicknameModal').classList.add('show');
+};
+window.saveNickname = async (skip) => {
+  if(!skip) {
+    const val = document.getElementById('nicknameInput').value.trim();
+    if(val.length > 0) { userState.nickname = val; await saveState(); updateNameDisplay(); }
+  } else {
+    userState.nickname = userState.nickname || currentUser.displayName?.split(' ')[0] || 'Jogador';
+    await saveState();
+  }
+  document.getElementById('nicknameModal').classList.remove('show');
+};
+
+// ── SIDEBAR TABS ──────────────────────────────────────
+window.switchSTab = (name, el) => {
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.spanel').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('spanel-' + name).classList.add('on');
+  if(name === 'chat') {
+    chatVisible = true;
+    unreadCount = 0;
+    document.getElementById('unreadBadge').style.display = 'none';
+    scrollChat();
+  } else {
+    chatVisible = false;
+  }
+};
+
+// ── CHAT ──────────────────────────────────────────────
+function startChat() {
+  if(chatUnsub) chatUnsub();
+  const q = query(collection(db, 'chat'), orderBy('ts', 'asc'), limit(100));
+  chatUnsub = onSnapshot(q, (snap) => {
+    const msgs = [];
+    snap.forEach(d => msgs.push({id: d.id, ...d.data()}));
+    renderChat(msgs);
+  });
+}
+
+function renderChat(msgs) {
+  const el = document.getElementById('chatMessages');
+  if(!msgs.length) { el.innerHTML = '<div class="empty-txt">Sem mensagens ainda.<br>Seja o primeiro!</div>'; return; }
+
+  let newUnread = 0;
+  el.innerHTML = msgs.map(m => {
+    const isMe = currentUser && m.uid === currentUser.uid;
+    const isSystem = m.type === 'system';
+    if(isSystem) return `<div class="msg-system">${m.text}</div>`;
+    const time = m.ts?.toDate ? new Date(m.ts.toDate()).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '';
+    if(!isMe && m.id !== lastSeenMsgId && !chatVisible) newUnread++;
+    return `<div class="chat-msg ${isMe?'mine':'theirs'}">
+      ${!isMe?`<div class="msg-meta"><img class="msg-avatar" src="${m.photo||''}" onerror="this.style.display='none'" alt=""><span class="msg-name">${m.name||'Jogador'}</span></div>`:''}
+      <div class="msg-bubble">${escHtml(m.text)}</div>
+      <div class="msg-time">${time}</div>
+    </div>`;
+  }).join('');
+
+  if(!chatVisible && newUnread > 0) {
+    unreadCount += newUnread;
+    const badge = document.getElementById('unreadBadge');
+    badge.style.display = 'inline';
+    badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+  }
+  if(msgs.length) lastSeenMsgId = msgs[msgs.length-1].id;
+  if(chatVisible) scrollChat();
+}
+
+function scrollChat() {
+  setTimeout(() => {
+    const el = document.getElementById('chatMessages');
+    el.scrollTop = el.scrollHeight;
+  }, 50);
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.sendChat = async () => {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text || !currentUser) return;
+  input.value = '';
+  const name = userState.nickname || currentUser.displayName?.split(' ')[0] || 'Jogador';
+  await addDoc(collection(db, 'chat'), {
+    uid: currentUser.uid,
+    name,
+    photo: currentUser.photoURL || '',
+    text,
+    ts: serverTimestamp()
+  });
+};
+
+// ── ADMIN ─────────────────────────────────────────────
+window.adminResetAll = async () => {
+  if(currentUser.uid !== ADMIN_UID) return;
+  if(!confirm('RESETAR TODOS os jogadores? Isso apaga todo o progresso de TODOS. Irreversível.')) return;
+  const snap = await getDocs(collection(db, 'users'));
+  const batch = writeBatch(db);
+  snap.forEach(d => {
+    const data = d.data();
+    batch.set(doc(db, 'users', d.id), {
+      ...freshState(),
+      nickname: data.nickname || null,
+      displayName: data.displayName || null,
+      photoURL: data.photoURL || null,
+    });
+  });
+  await batch.commit();
+  // reload own state
+  await loadState();
+  render();
+  await addDoc(collection(db, 'chat'), {uid:'system',type:'system',text:'🔄 O admin resetou o ranking. Nova temporada iniciada!',ts:serverTimestamp()});
+  showBanner('✅ Todos os jogadores foram resetados', 'up');
+};
+
+window.adminClearChat = async () => {
+  if(currentUser.uid !== ADMIN_UID) return;
+  if(!confirm('Limpar todo o chat?')) return;
+  const snap = await getDocs(collection(db, 'chat'));
+  const batch = writeBatch(db);
+  snap.forEach(d => batch.delete(doc(db, 'chat', d.id)));
+  await batch.commit();
+  showBanner('✅ Chat limpo', 'info');
+};
+
+window.adminResetWeek = async () => {
+  if(currentUser.uid !== ADMIN_UID) return;
+  if(!confirm('Resetar semana de todos os jogadores?')) return;
+  const snap = await getDocs(collection(db, 'users'));
+  const batch = writeBatch(db);
+  snap.forEach(d => {
+    batch.update(doc(db, 'users', d.id), {
+      weeklyTotal: 0,
+      weekKey: null,
+      week: {Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null}
+    });
+  });
+  await batch.commit();
+  await loadState();
+  render();
+  showBanner('✅ Semana resetada para todos', 'info');
+};
+
 // ── FIRESTORE ─────────────────────────────────────────
 async function loadState() {
   const snap = await getDoc(doc(db, 'users', currentUser.uid));
-  if(snap.exists()) {
-    userState = snap.data();
-  } else {
-    userState = freshState();
-    await saveState();
-  }
+  if(snap.exists()) { userState = snap.data(); }
+  else { userState = freshState(); await saveState(); }
 }
 
 function freshState() {
-  return {xp:0,log:[],week:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null},todayKey:null,todayCount:0,streak:0,missedToday:false,weeklyTotal:0,weekKey:null,canUndo:false};
+  return {xp:0,log:[],week:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null},todayKey:null,todayCount:0,todayMeetings:0,streak:0,missedToday:false,weeklyTotal:0,weekKey:null,nickname:null};
 }
 
 async function saveState() {
-  userState.displayName = currentUser.displayName;
+  userState.displayName = userState.nickname || currentUser.displayName;
   userState.photoURL = currentUser.photoURL;
   userState.updatedAt = Date.now();
   await setDoc(doc(db, 'users', currentUser.uid), userState);
@@ -359,39 +626,38 @@ const TIERS=[
 function getRank(xp){
   for(let t=0;t<TIERS.length;t++){
     const T=TIERS[t];
-    if(t===TIERS.length-1)return{name:'Assessor PRIVATE 🔥',fullName:'Assessor PRIVATE 🔥',tierName:T.n,tierIdx:t,color:T.c,floor:232000,ceil:null,pct:100,ti:t,di:3};
+    if(t===TIERS.length-1)return{fullName:'Assessor PRIVATE 🔥',color:T.c,floor:232000,ceil:null,pct:100,ti:t,di:3};
     for(let d=0;d<T.t.length;d++){
       if(xp<T.t[d]){
         const floor=d===0?(t===0?0:TIERS[t-1].t[3]):T.t[d-1];
         const ceil=T.t[d];
         const pct=Math.round(((xp-floor)/(ceil-floor))*100);
-        return{name:T.n,fullName:`${T.n} ${4-d}`,tierName:T.n,tierIdx:t,color:T.c,floor,ceil,pct:Math.max(0,Math.min(100,pct)),ti:t,di:d};
+        return{fullName:`${T.n} ${4-d}`,color:T.c,floor,ceil,pct:Math.max(0,Math.min(100,pct)),ti:t,di:d};
       }
     }
   }
 }
 
-// Emblema SVG — mesmo visual mas mapeado para os novos tiers por posição
 const EMBLEM_STYLES=['Ferro','Bronze','Prata','Ouro','Platina','Diamante','Imortal','Radiante'];
-function emblemSVG(tierIdx, divIdx, size){
-  const styleName = EMBLEM_STYLES[Math.min(tierIdx, EMBLEM_STYLES.length-1)];
+function emblemSVG(ti,di,size){
+  const sn=EMBLEM_STYLES[Math.min(ti,7)];
   size=size||56;const cx=size/2,cy=size/2,s=size;
-  const bright=[0.42,0.6,0.78,1.0][divIdx];
-  const coreAlpha=[0,0.4,0.7,1.0][divIdx];
+  const bright=[0.42,0.6,0.78,1.0][di];
+  const ca=[0,0.4,0.7,1.0][di];
   const sw=size>40?1.5:1;
   function pts(n,r,cx,cy,off){off=off||-90;return Array.from({length:n},(_,i)=>{const a=(i*(360/n)+off)*Math.PI/180;return(cx+r*Math.cos(a))+','+(cy+r*Math.sin(a))}).join(' ')}
   function star(n,r1,r2,cx,cy){return Array.from({length:n*2},(_,i)=>{const a=(i*(360/(n*2))-90)*Math.PI/180;const r=i%2===0?r1:r2;return(cx+r*Math.cos(a))+','+(cy+r*Math.sin(a))}).join(' ')}
-  const shapes={
-    Ferro:`<polygon points="${pts(6,s*.45,cx,cy)}" fill="rgba(60,60,60,${bright})" stroke="rgba(158,158,158,${bright})" stroke-width="${sw}"/><polygon points="${pts(6,s*.33,cx,cy)}" fill="rgba(20,20,20,${bright*.9})" stroke="rgba(110,110,110,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<line x1="${cx}" y1="${cy-s*.22}" x2="${cx}" y2="${cy-s*.12}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><line x1="${cx}" y1="${cy+s*.12}" x2="${cx}" y2="${cy+s*.22}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><line x1="${cx-s*.22}" y1="${cy}" x2="${cx-s*.12}" y2="${cy}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><line x1="${cx+s*.12}" y1="${cy}" x2="${cx+s*.22}" y2="${cy}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="none" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/>`:''}`,
-    Bronze:`<polygon points="${star(6,s*.46,s*.32,cx,cy)}" fill="rgba(80,45,10,${bright})" stroke="rgba(205,127,50,${bright})" stroke-width="${sw}"/><polygon points="${star(6,s*.35,s*.23,cx,cy)}" fill="rgba(30,15,3,${bright*.9})" stroke="rgba(160,90,30,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="rgba(255,180,80,${coreAlpha*.6})" stroke="rgba(255,210,120,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(255,220,150,${coreAlpha})"/>`:''}`,
-    Prata:`<polygon points="${star(7,s*.46,s*.33,cx,cy)}" fill="rgba(50,65,72,${bright})" stroke="rgba(176,190,197,${bright})" stroke-width="${sw}"/><polygon points="${star(7,s*.35,s*.24,cx,cy)}" fill="rgba(15,22,26,${bright*.9})" stroke="rgba(120,145,155,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<polygon points="${pts(5,s*.12,cx,cy)}" fill="rgba(210,225,232,${coreAlpha*.7})" stroke="rgba(240,248,255,${coreAlpha})" stroke-width="${sw*.6}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(240,248,255,${coreAlpha})"/>`:''}`,
-    Ouro:`<polygon points="${star(8,s*.47,s*.35,cx,cy)}" fill="rgba(80,50,0,${bright})" stroke="rgba(255,215,0,${bright})" stroke-width="${sw}"/><polygon points="${star(8,s*.36,s*.26,cx,cy)}" fill="rgba(28,17,0,${bright*.9})" stroke="rgba(200,150,0,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<polygon points="${pts(5,s*.13,cx,cy)}" fill="rgba(255,235,80,${coreAlpha*.7})" stroke="rgba(255,250,180,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(255,250,180,${coreAlpha})"/>`:''}`,
-    Platina:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(0,40,55,${bright})" stroke="rgba(0,188,212,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.34}" fill="rgba(0,15,22,${bright*.9})" stroke="rgba(0,130,155,${bright})" stroke-width="${sw*.7}"/><polygon points="${pts(6,s*.43,cx,cy)}" fill="none" stroke="rgba(0,200,225,${bright*.45})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<polygon points="${pts(6,s*.14,cx,cy)}" fill="rgba(0,200,220,${coreAlpha*.35})" stroke="rgba(160,240,255,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(160,240,255,${coreAlpha})"/>`:''}`,
-    Diamante:`<polygon points="${pts(7,s*.46,cx,cy)}" fill="rgba(22,8,55,${bright})" stroke="rgba(124,77,255,${bright})" stroke-width="${sw}"/><polygon points="${pts(7,s*.34,cx,cy)}" fill="rgba(8,3,20,${bright*.9})" stroke="rgba(80,40,180,${bright})" stroke-width="${sw*.7}"/><polygon points="${pts(7,s*.22,cx,cy)}" fill="none" stroke="rgba(140,90,255,${bright*.45})" stroke-width="${sw*.6}"/>${coreAlpha>0?`<polygon points="${star(4,s*.13,s*.07,cx,cy)}" fill="rgba(180,140,255,${coreAlpha*.6})" stroke="rgba(220,200,255,${coreAlpha})" stroke-width="${sw*.7}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(220,200,255,${coreAlpha})"/>`:''}`,
-    Imortal:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(45,4,12,${bright})" stroke="rgba(255,23,68,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.35}" fill="rgba(18,2,5,${bright*.95})" stroke="rgba(160,8,35,${bright})" stroke-width="${sw*.7}"/><polygon points="${star(8,s*.28,s*.19,cx,cy)}" fill="rgba(255,23,68,${bright*.2})" stroke="rgba(255,90,110,${bright*.75})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<path d="M${cx},${cy-s*.15} L${cx+s*.07},${cy+s*.04} L${cx+s*.15},${cy+s*.04} L${cx+s*.04},${cy+s*.14} L${cx+s*.09},${cy+s*.26} L${cx},${cy+s*.17} L${cx-s*.09},${cy+s*.26} L${cx-s*.04},${cy+s*.14} L${cx-s*.15},${cy+s*.04} L${cx-s*.07},${cy+s*.04} Z" fill="rgba(255,50,80,${coreAlpha*.65})" stroke="rgba(255,150,160,${coreAlpha})" stroke-width="${sw*.75}"/><circle cx="${cx}" cy="${cy+s*.06}" r="${s*.04}" fill="rgba(255,180,180,${coreAlpha})"/>`:''}`,
+  const sh={
+    Ferro:`<polygon points="${pts(6,s*.45,cx,cy)}" fill="rgba(60,60,60,${bright})" stroke="rgba(158,158,158,${bright})" stroke-width="${sw}"/><polygon points="${pts(6,s*.33,cx,cy)}" fill="rgba(20,20,20,${bright*.9})" stroke="rgba(110,110,110,${bright})" stroke-width="${sw*.7}"/>${ca>0?`<line x1="${cx}" y1="${cy-s*.22}" x2="${cx}" y2="${cy-s*.12}" stroke="rgba(200,200,200,${ca})" stroke-width="${sw}"/><line x1="${cx}" y1="${cy+s*.12}" x2="${cx}" y2="${cy+s*.22}" stroke="rgba(200,200,200,${ca})" stroke-width="${sw}"/><line x1="${cx-s*.22}" y1="${cy}" x2="${cx-s*.12}" y2="${cy}" stroke="rgba(200,200,200,${ca})" stroke-width="${sw}"/><line x1="${cx+s*.12}" y1="${cy}" x2="${cx+s*.22}" y2="${cy}" stroke="rgba(200,200,200,${ca})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="none" stroke="rgba(200,200,200,${ca})" stroke-width="${sw}"/>`:''}`,
+    Bronze:`<polygon points="${star(6,s*.46,s*.32,cx,cy)}" fill="rgba(80,45,10,${bright})" stroke="rgba(205,127,50,${bright})" stroke-width="${sw}"/><polygon points="${star(6,s*.35,s*.23,cx,cy)}" fill="rgba(30,15,3,${bright*.9})" stroke="rgba(160,90,30,${bright})" stroke-width="${sw*.7}"/>${ca>0?`<circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="rgba(255,180,80,${ca*.6})" stroke="rgba(255,210,120,${ca})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(255,220,150,${ca})"/>`:''}`,
+    Prata:`<polygon points="${star(7,s*.46,s*.33,cx,cy)}" fill="rgba(50,65,72,${bright})" stroke="rgba(176,190,197,${bright})" stroke-width="${sw}"/><polygon points="${star(7,s*.35,s*.24,cx,cy)}" fill="rgba(15,22,26,${bright*.9})" stroke="rgba(120,145,155,${bright})" stroke-width="${sw*.7}"/>${ca>0?`<polygon points="${pts(5,s*.12,cx,cy)}" fill="rgba(210,225,232,${ca*.7})" stroke="rgba(240,248,255,${ca})" stroke-width="${sw*.6}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(240,248,255,${ca})"/>`:''}`,
+    Ouro:`<polygon points="${star(8,s*.47,s*.35,cx,cy)}" fill="rgba(80,50,0,${bright})" stroke="rgba(255,215,0,${bright})" stroke-width="${sw}"/><polygon points="${star(8,s*.36,s*.26,cx,cy)}" fill="rgba(28,17,0,${bright*.9})" stroke="rgba(200,150,0,${bright})" stroke-width="${sw*.7}"/>${ca>0?`<polygon points="${pts(5,s*.13,cx,cy)}" fill="rgba(255,235,80,${ca*.7})" stroke="rgba(255,250,180,${ca})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(255,250,180,${ca})"/>`:''}`,
+    Platina:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(0,40,55,${bright})" stroke="rgba(0,188,212,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.34}" fill="rgba(0,15,22,${bright*.9})" stroke="rgba(0,130,155,${bright})" stroke-width="${sw*.7}"/><polygon points="${pts(6,s*.43,cx,cy)}" fill="none" stroke="rgba(0,200,225,${bright*.45})" stroke-width="${sw*.7}"/>${ca>0?`<polygon points="${pts(6,s*.14,cx,cy)}" fill="rgba(0,200,220,${ca*.35})" stroke="rgba(160,240,255,${ca})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(160,240,255,${ca})"/>`:''}`,
+    Diamante:`<polygon points="${pts(7,s*.46,cx,cy)}" fill="rgba(22,8,55,${bright})" stroke="rgba(124,77,255,${bright})" stroke-width="${sw}"/><polygon points="${pts(7,s*.34,cx,cy)}" fill="rgba(8,3,20,${bright*.9})" stroke="rgba(80,40,180,${bright})" stroke-width="${sw*.7}"/><polygon points="${pts(7,s*.22,cx,cy)}" fill="none" stroke="rgba(140,90,255,${bright*.45})" stroke-width="${sw*.6}"/>${ca>0?`<polygon points="${star(4,s*.13,s*.07,cx,cy)}" fill="rgba(180,140,255,${ca*.6})" stroke="rgba(220,200,255,${ca})" stroke-width="${sw*.7}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(220,200,255,${ca})"/>`:''}`,
+    Imortal:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(45,4,12,${bright})" stroke="rgba(255,23,68,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.35}" fill="rgba(18,2,5,${bright*.95})" stroke="rgba(160,8,35,${bright})" stroke-width="${sw*.7}"/><polygon points="${star(8,s*.28,s*.19,cx,cy)}" fill="rgba(255,23,68,${bright*.2})" stroke="rgba(255,90,110,${bright*.75})" stroke-width="${sw*.7}"/>${ca>0?`<path d="M${cx},${cy-s*.15} L${cx+s*.07},${cy+s*.04} L${cx+s*.15},${cy+s*.04} L${cx+s*.04},${cy+s*.14} L${cx+s*.09},${cy+s*.26} L${cx},${cy+s*.17} L${cx-s*.09},${cy+s*.26} L${cx-s*.04},${cy+s*.14} L${cx-s*.15},${cy+s*.04} L${cx-s*.07},${cy+s*.04} Z" fill="rgba(255,50,80,${ca*.65})" stroke="rgba(255,150,160,${ca})" stroke-width="${sw*.75}"/><circle cx="${cx}" cy="${cy+s*.06}" r="${s*.04}" fill="rgba(255,180,180,${ca})"/>`:''}`,
     Radiante:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(30,20,0,${bright})" stroke="rgba(255,215,0,${bright})" stroke-width="${sw*1.5}"/><circle cx="${cx}" cy="${cy}" r="${s*.36}" fill="rgba(15,10,0,${bright*.95})" stroke="rgba(255,140,0,${bright})" stroke-width="${sw}"/><polygon points="${star(8,s*.44,s*.31,cx,cy)}" fill="none" stroke="rgba(255,215,0,${bright*.55})" stroke-width="${sw*.65}"/><polygon points="${star(8,s*.22,s*.14,cx,cy)}" fill="rgba(255,220,50,${bright*.45})" stroke="rgba(255,240,150,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.07}" fill="rgba(255,252,200,${bright})"/>`,
   };
-  return`<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">${shapes[styleName]||shapes['Ferro']}</svg>`;
+  return`<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${sh[sn]||sh['Ferro']}</svg>`;
 }
 
 // ── HELPERS ───────────────────────────────────────────
@@ -401,103 +667,118 @@ function weekKey(){const d=new Date();return d.getFullYear()+'-W'+Math.ceil((((d
 
 function syncDay(){
   const tk=todayKey(),wk=weekKey();
-  if(userState.todayKey!==tk){userState.todayCount=0;userState.todayKey=tk;userState.missedToday=false;userState.canUndo=false;}
+  if(userState.todayKey!==tk){userState.todayCount=0;userState.todayMeetings=0;userState.todayKey=tk;userState.missedToday=false;}
   if(userState.weekKey!==wk){userState.weeklyTotal=0;userState.weekKey=wk;userState.week={Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null};}
+}
+function totalToday(){return(userState.todayCount||0)+(userState.todayMeetings||0);}
+function addLog(desc,pts){if(!userState.log)userState.log=[];userState.log.push({desc,pts,date:todayKey()});if(userState.log.length>80)userState.log=userState.log.slice(-80);}
+
+function checkBonus(prevTotal){
+  let bonus=0,bonusDesc='';
+  const newTotal=totalToday();
+  if(prevTotal<DAILY_GOAL&&newTotal>=DAILY_GOAL){
+    bonus+=50;
+    userState.streak=(userState.streak||0)+1;
+    bonusDesc='🎯 Meta do dia atingida!';
+    if(userState.streak%5===0){bonus+=150;bonusDesc=`🔥 ${userState.streak} dias seguidos!`;}
+  }
+  if((userState.weeklyTotal||0)===WEEKLY_GOAL){bonus+=100;bonusDesc='🏆 Semana perfeita!';}
+  return{bonus,bonusDesc};
+}
+
+async function checkPromotion(prevR){
+  const newR=getRank(userState.xp);
+  if(newR.ti>prevR.ti||(newR.ti===prevR.ti&&newR.di<prevR.di)){
+    showBanner(`⬆️ Promovido para ${newR.fullName}!`,'up');
+    addLog(`⬆️ Promovido para ${newR.fullName}!`,0);
+  }
 }
 
 // ── CALL ──────────────────────────────────────────────
 window.doCall = async () => {
-  if(!userState) return;
+  if(!userState)return;
   syncDay();
-  if(userState.missedToday){alert('Dia encerrado. Volte amanhã! 💪');return;}
-
+  if(userState.missedToday){alert('Dia encerrado. Volte amanhã!');return;}
   const prevR=getRank(userState.xp);
-  userState.todayCount++;
+  const prevTotal=totalToday();
+  userState.todayCount=(userState.todayCount||0)+1;
   const dk=dayKey();
   userState.week[dk]=(userState.week[dk]||0)+1;
   userState.weeklyTotal=(userState.weeklyTotal||0)+1;
-  userState.canUndo=true;
-
-  // XP logic
-  // +3 per call always
-  // hitting exactly 20 → +50 bonus
-  // every 5 streak days (checked after day completion) → +150
-  // hitting exactly 100 weekly → +100 bonus
-  let xpGain=3, desc=`📞 Ligação #${userState.todayCount}`;
-
-  if(userState.todayCount===20){
-    xpGain+=50;
-    userState.streak=(userState.streak||0)+1;
-    if(userState.streak%5===0){
-      xpGain+=150;
-      desc=`🔥 ${userState.streak} dias seguidos! Meta batida`;
-    } else {
-      desc='🎯 Meta do dia atingida!';
-    }
-  }
-
-  if(userState.weeklyTotal===100){
-    xpGain+=100;
-    desc='🏆 Semana perfeita! (bônus)';
-  }
-
-  userState.xp+=xpGain;
-  if(!userState.log)userState.log=[];
-  userState.log.push({desc,pts:xpGain,date:todayKey()});
-  if(userState.log.length>80)userState.log=userState.log.slice(-80);
-
-  const newR=getRank(userState.xp);
-  if(newR.ti>prevR.ti||(newR.ti===prevR.ti&&newR.di<prevR.di)){
-    showBanner(`⬆️ Promovido para ${newR.fullName}!`,'up');
-    userState.log.push({desc:`⬆️ Promovido para ${newR.fullName}!`,pts:0,date:todayKey()});
-  }
-
+  userState.xp+=3; addLog(`📞 Ligação #${userState.todayCount}`,3);
+  const{bonus,bonusDesc}=checkBonus(prevTotal);
+  if(bonus>0){userState.xp+=bonus;addLog(bonusDesc,bonus);}
+  await checkPromotion(prevR);
   await saveState();
-  document.getElementById('mainBtn').classList.add('pop');
-  setTimeout(()=>document.getElementById('mainBtn').classList.remove('pop'),220);
+  document.getElementById('callBtn').classList.add('pop');
+  setTimeout(()=>document.getElementById('callBtn').classList.remove('pop'),200);
   render();
 };
 
-// ── UNDO ──────────────────────────────────────────────
-window.undoCall = async () => {
-  if(!userState) return;
+// ── MEETING ───────────────────────────────────────────
+window.doMeeting = async () => {
+  if(!userState)return;
   syncDay();
-  if(!userState.canUndo || userState.todayCount<=0){
-    showBanner('Nada para desfazer.','info');
-    return;
-  }
-
+  if(userState.missedToday){alert('Dia encerrado. Volte amanhã!');return;}
   const prevR=getRank(userState.xp);
+  const prevTotal=totalToday();
+  userState.todayMeetings=(userState.todayMeetings||0)+1;
+  const dk=dayKey();
+  userState.week[dk]=(userState.week[dk]||0)+1;
+  userState.weeklyTotal=(userState.weeklyTotal||0)+1;
+  userState.xp+=6; addLog(`📅 Reunião #${userState.todayMeetings}`,6);
+  const{bonus,bonusDesc}=checkBonus(prevTotal);
+  if(bonus>0){userState.xp+=bonus;addLog(bonusDesc,bonus);}
+  await checkPromotion(prevR);
+  await saveState();
+  document.getElementById('meetBtn').classList.add('pop');
+  setTimeout(()=>document.getElementById('meetBtn').classList.remove('pop'),200);
+  render();
+};
 
-  // reverse XP of last call
-  let xpRemove=3;
-  const wasAt=userState.todayCount;
-  if(wasAt===20) xpRemove+=50; // remove daily bonus
-  // check if streak bonus was gained at 20
-  if(wasAt===20 && userState.streak>0 && userState.streak%5===0) xpRemove+=150;
-  if(userState.weeklyTotal===100) xpRemove+=100; // remove weekly bonus
-
-  userState.xp=Math.max(0, userState.xp-xpRemove);
+// ── REMOVE ────────────────────────────────────────────
+window.removeCall = async () => {
+  if(!userState||!(userState.todayCount>0))return;
+  syncDay();
+  const prevR=getRank(userState.xp);
+  const wasGoalHit=totalToday()>=DAILY_GOAL;
   userState.todayCount--;
   const dk=dayKey();
   userState.week[dk]=Math.max(0,(userState.week[dk]||1)-1);
   userState.weeklyTotal=Math.max(0,(userState.weeklyTotal||1)-1);
-  userState.canUndo=false;
-
-  // reverse streak if we undid the 20th call
-  if(wasAt===20 && userState.streak>0) userState.streak--;
-
-  if(!userState.log)userState.log=[];
-  userState.log.push({desc:`↩ Última ligação desfeita`,pts:-xpRemove,date:todayKey()});
-
-  const newR=getRank(userState.xp);
-  if(newR.ti<prevR.ti||(newR.ti===prevR.ti&&newR.di>prevR.di)){
-    showBanner(`⬇️ Rebaixado para ${newR.fullName}`,'down');
+  let xpRemove=3;
+  if(wasGoalHit&&totalToday()<DAILY_GOAL){
+    xpRemove+=50;
+    if(userState.streak>0&&userState.streak%5===0)xpRemove+=150;
+    if(userState.streak>0)userState.streak--;
   }
+  userState.xp=Math.max(0,userState.xp-xpRemove);
+  addLog(`↩ Ligação removida`,-xpRemove);
+  const newR=getRank(userState.xp);
+  if(newR.ti<prevR.ti||(newR.ti===prevR.ti&&newR.di>prevR.di))showBanner(`⬇️ Rebaixado para ${newR.fullName}`,'down');
+  await saveState();render();
+};
 
-  showBanner('↩ Ligação desfeita','info');
-  await saveState();
-  render();
+window.removeMeeting = async () => {
+  if(!userState||!(userState.todayMeetings>0))return;
+  syncDay();
+  const prevR=getRank(userState.xp);
+  const wasGoalHit=totalToday()>=DAILY_GOAL;
+  userState.todayMeetings--;
+  const dk=dayKey();
+  userState.week[dk]=Math.max(0,(userState.week[dk]||1)-1);
+  userState.weeklyTotal=Math.max(0,(userState.weeklyTotal||1)-1);
+  let xpRemove=6;
+  if(wasGoalHit&&totalToday()<DAILY_GOAL){
+    xpRemove+=50;
+    if(userState.streak>0&&userState.streak%5===0)xpRemove+=150;
+    if(userState.streak>0)userState.streak--;
+  }
+  userState.xp=Math.max(0,userState.xp-xpRemove);
+  addLog(`↩ Reunião removida`,-xpRemove);
+  const newR=getRank(userState.xp);
+  if(newR.ti<prevR.ti||(newR.ti===prevR.ti&&newR.di>prevR.di))showBanner(`⬇️ Rebaixado para ${newR.fullName}`,'down');
+  await saveState();render();
 };
 
 // ── MISS DAY ──────────────────────────────────────────
@@ -506,26 +787,20 @@ window.missDay = async () => {
   syncDay();
   if(userState.missedToday){alert('Já registrado.');return;}
   if(!confirm('Penalidade aplicada e sequência zerada. Confirmar?'))return;
-
   const prevR=getRank(userState.xp);
-  const done=userState.todayCount||0;
-  const penalty=-Math.round(((20-done)*3+50)*0.6);
+  const done=totalToday();
+  const penalty=-Math.round(((DAILY_GOAL-done)*3+50)*0.6);
   userState.xp=Math.max(0,userState.xp+penalty);
-  userState.missedToday=true;userState.streak=0;userState.canUndo=false;
+  userState.missedToday=true;userState.streak=0;
   userState.week[dayKey()]=done;
-  if(!userState.log)userState.log=[];
-  userState.log.push({desc:'❌ Dia encerrado sem meta',pts:penalty,date:todayKey()});
-
+  addLog('❌ Dia encerrado sem meta',penalty);
   const newR=getRank(userState.xp);
-  if(newR.ti<prevR.ti||(newR.ti===prevR.ti&&newR.di>prevR.di)){
-    showBanner(`⬇️ Rebaixado para ${newR.fullName}`,'down');
-    userState.log.push({desc:`⬇️ Rebaixado para ${newR.fullName}`,pts:0,date:todayKey()});
-  }
+  if(newR.ti<prevR.ti||(newR.ti===prevR.ti&&newR.di>prevR.di)){showBanner(`⬇️ Rebaixado para ${newR.fullName}`,'down');addLog(`⬇️ Rebaixado para ${newR.fullName}`,0);}
   await saveState();render();
 };
 
 window.resetAll = async () => {
-  userState=freshState();
+  userState={...freshState(),nickname:userState.nickname};
   await saveState();render();
 };
 
@@ -533,60 +808,40 @@ window.resetAll = async () => {
 function render(){
   if(!userState)return;
   syncDay();
-
-  const r=getRank(userState.xp||0);
+  const xp=userState.xp||0;
+  const r=getRank(xp);
   document.getElementById('rEmblem').innerHTML=emblemSVG(r.ti,r.di,64);
   document.getElementById('rName').textContent=r.fullName;
-  document.getElementById('rXP').textContent=(userState.xp||0).toLocaleString('pt-BR');
+  document.getElementById('rXP').textContent=xp.toLocaleString('pt-BR');
   document.getElementById('xpFill').style.cssText=`width:${r.pct}%;background:${r.color}`;
   document.getElementById('xpA').textContent=(r.floor||0).toLocaleString('pt-BR');
   document.getElementById('xpB').textContent=r.ceil?r.ceil.toLocaleString('pt-BR'):'∞';
-  document.getElementById('rSub').textContent=r.ceil?(r.ceil-(userState.xp||0)).toLocaleString('pt-BR')+' XP para o próximo':'Posto máximo 🔥';
-
+  document.getElementById('rSub').textContent=r.ceil?(r.ceil-xp).toLocaleString('pt-BR')+' XP para o próximo':'Posto máximo 🔥';
   const dotsEl=document.getElementById('levelDots');
   dotsEl.style.color=r.color;
-  if(r.ti<TIERS.length-1){
-    const filled=4-r.di;
-    dotsEl.innerHTML=Array.from({length:4},(_,i)=>`<div class="dot${i<filled?' on':''}" style="${i<filled?`background:${r.color}`:''}"></div>`).join('');
-  } else {
-    dotsEl.innerHTML=`<div class="dot on" style="background:#FFD700;width:26px;border-radius:3px"></div>`;
-  }
+  if(r.ti<TIERS.length-1){const f=4-r.di;dotsEl.innerHTML=Array.from({length:4},(_,i)=>`<div class="dot${i<f?' on':''}" style="${i<f?`background:${r.color}`:''}"></div>`).join('');}
+  else{dotsEl.innerHTML=`<div class="dot on" style="background:#FFD700;width:26px;border-radius:3px"></div>`;}
 
-  const tc=userState.todayCount||0;
+  const tc=userState.todayCount||0, tm=userState.todayMeetings||0, tot=tc+tm;
   document.getElementById('todayN').textContent=tc;
+  document.getElementById('meetN').textContent=tm;
   document.getElementById('weekN').textContent=userState.weeklyTotal||0;
   document.getElementById('streakN').textContent=userState.streak||0;
-  document.getElementById('progFill').style.width=Math.min(100,Math.round((tc/20)*100))+'%';
-  document.getElementById('progTxt').textContent=tc+' / 20';
-
-  // undo button state
-  const undoBtn=document.getElementById('undoBtn');
-  undoBtn.disabled=!userState.canUndo||userState.todayCount<=0;
+  document.getElementById('progFill').style.width=Math.min(100,Math.round((tot/DAILY_GOAL)*100))+'%';
+  document.getElementById('progTxt').textContent=tot+' / '+DAILY_GOAL;
+  document.getElementById('removeCallBtn').disabled=tc<=0;
+  document.getElementById('removeMeetBtn').disabled=tm<=0;
 
   const dayKeys=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const dayLbls=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
   const todayDk=dayKey();
-  document.getElementById('weekGrid').innerHTML=dayKeys.map((k,i)=>{
-    const v=userState.week?userState.week[k]:null;
-    return`<div class="day-cell${v>=20?' done':v!=null&&v<20?' fail':''}${k===todayDk?' today':''}"><div class="day-nm">${dayLbls[i]}</div><div class="day-n">${v!=null?v:'–'}</div></div>`;
-  }).join('');
+  document.getElementById('weekGrid').innerHTML=dayKeys.map((k,i)=>{const v=userState.week?userState.week[k]:null;return`<div class="day-cell${v>=DAILY_GOAL?' done':v!=null&&v<DAILY_GOAL?' fail':''}${k===todayDk?' today':''}"><div class="day-nm">${dayLbls[i]}</div><div class="day-n">${v!=null?v:'–'}</div></div>`;}).join('');
 
-  // Ladder
   const rows=[];
   for(let t=TIERS.length-1;t>=0;t--){
     const T=TIERS[t];
-    if(t===TIERS.length-1){
-      const isHere=(userState.xp||0)>=232000;
-      rows.push(`<div class="ladder-row${isHere?' here':''}"><div class="ladder-emblem">${emblemSVG(t,3,36)}</div><div style="flex:1"><div style="font-size:13px">${T.n}</div><div style="font-size:11px;color:var(--text3)">232.000+ XP</div></div>${isHere?'<span style="font-size:11px;color:#1DB954">← você</span>':''}</div>`);
-    } else {
-      for(let d=T.t.length-1;d>=0;d--){
-        const floor=d===0?(t===0?0:TIERS[t-1].t[3]):T.t[d-1];
-        const ceil=T.t[d];
-        const isHere=(userState.xp||0)>=floor&&(userState.xp||0)<ceil;
-        const isPast=(userState.xp||0)>=ceil;
-        rows.push(`<div class="ladder-row${isHere?' here':''}${isPast?' past':''}"><div class="ladder-emblem">${emblemSVG(t,d,36)}</div><div style="flex:1"><div style="font-size:13px">${T.n} ${4-d}</div><div style="font-size:11px;color:var(--text3)">${floor.toLocaleString('pt-BR')} – ${ceil.toLocaleString('pt-BR')} XP</div></div>${isHere?`<span style="font-size:11px;color:#1DB954">← você</span>`:''}</div>`);
-      }
-    }
+    if(t===TIERS.length-1){const isHere=xp>=232000;rows.push(`<div class="ladder-row${isHere?' here':''}"><div class="ladder-emblem">${emblemSVG(t,3,36)}</div><div style="flex:1"><div style="font-size:13px">${T.n}</div><div style="font-size:11px;color:var(--text3)">232.000+ XP</div></div>${isHere?'<span style="font-size:11px;color:#1DB954">← você</span>':''}</div>`);}
+    else{for(let d=T.t.length-1;d>=0;d--){const floor=d===0?(t===0?0:TIERS[t-1].t[3]):T.t[d-1];const ceil=T.t[d];const isHere=xp>=floor&&xp<ceil;const isPast=xp>=ceil;rows.push(`<div class="ladder-row${isHere?' here':''}${isPast?' past':''}"><div class="ladder-emblem">${emblemSVG(t,d,36)}</div><div style="flex:1"><div style="font-size:13px">${T.n} ${4-d}</div><div style="font-size:11px;color:var(--text3)">${floor.toLocaleString('pt-BR')} – ${ceil.toLocaleString('pt-BR')} XP</div></div>${isHere?`<span style="font-size:11px;color:#1DB954">← você</span>`:''}</div>`);}}
   }
   document.getElementById('ladderEl').innerHTML=rows.join('');
 
@@ -606,14 +861,15 @@ function renderLeaderboard(players){
     const r=getRank(p.xp||0);
     const isMe=currentUser&&p.id===currentUser.uid;
     const pos=i<3?medals[i]:`${i+1}`;
-    const todayCt=p.todayKey===tk?(p.todayCount||0):0;
+    const todayCt=p.todayKey===tk?((p.todayCount||0)+(p.todayMeetings||0)):0;
     const topCls=i===0?' top1':i===1?' top2':i===2?' top3':'';
+    const dName=(p.displayName||'Jogador').split(' ')[0];
     return`<div class="lb-row${isMe?' me':''}${topCls}">
       <div class="lb-pos">${pos}</div>
       <img class="lb-avatar" src="${p.photoURL||''}" onerror="this.style.display='none'" alt="">
       <div class="lb-emblem">${emblemSVG(r.ti,r.di,24)}</div>
       <div class="lb-info">
-        <div class="lb-name">${(p.displayName||'Jogador').split(' ')[0]}${isMe?' ←':''}</div>
+        <div class="lb-name">${dName}${isMe?' ←':''}</div>
         <div class="lb-rank">${r.fullName.replace(' 🔥','')} · hoje: ${todayCt}</div>
       </div>
       <div class="lb-xp">${(p.xp||0).toLocaleString('pt-BR')}</div>
@@ -633,7 +889,6 @@ window.sw=(name,el)=>{
   el.classList.add('on');
   document.getElementById('panel-'+name).classList.add('on');
 };
-
 window.render=render;
 </script>
 </body>
