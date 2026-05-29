@@ -6,325 +6,407 @@
 <meta name="theme-color" content="#0f0f0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ELO Tracker">
-<title>ELO Tracker — Prospecção</title>
+<meta name="apple-mobile-web-app-title" content="Call Game">
+<title>Call Game — ELO Tracker</title>
 <style>
-  :root {
-    --bg: #0f0f0f;
-    --bg2: #1a1a1a;
-    --bg3: #222;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
-    --text: #f0f0f0;
-    --text2: #999;
-    --text3: #555;
-    --green: #1DB954;
-    --green-dark: #158a3e;
-    --red: #E24B4A;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overscroll-behavior: none; }
-  body { display: flex; flex-direction: column; max-width: 480px; margin: 0 auto; min-height: 100vh; }
+:root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#222;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.18);--text:#f0f0f0;--text2:#999;--text3:#555;--green:#1DB954;--green-dark:#158a3e;--red:#E24B4A;--radius:12px;--radius-sm:8px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overscroll-behavior:none}
+body{display:flex;flex-direction:column;max-width:480px;margin:0 auto;min-height:100vh}
 
-  /* HEADER */
-  .header { padding: 16px 16px 0; }
-  .rank-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-  .rank-emblem { width: 58px; height: 58px; flex-shrink: 0; }
-  .rank-emblem svg { width: 58px; height: 58px; }
-  .rank-info { flex: 1; }
-  .rank-name { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
-  .rank-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .level-dots { display: flex; gap: 5px; margin-top: 5px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg3); }
-  .dot.on { background: currentColor; }
-  .xp-total { text-align: right; flex-shrink: 0; }
-  .xp-total-val { font-size: 15px; font-weight: 600; }
-  .xp-total-lbl { font-size: 10px; color: var(--text3); margin-top: 1px; }
-  .xp-track { background: var(--bg3); border-radius: 100px; height: 6px; overflow: hidden; margin: 6px 0 3px; }
-  .xp-fill { height: 100%; border-radius: 100px; transition: width .6s ease; }
-  .xp-nums { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); }
+/* LOGIN SCREEN */
+#loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;gap:2rem}
+.login-logo{font-size:64px;line-height:1}
+.login-title{font-size:28px;font-weight:700;letter-spacing:-0.5px;text-align:center}
+.login-sub{font-size:14px;color:var(--text2);text-align:center;line-height:1.6}
+.google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#333;border:none;border-radius:100px;padding:14px 28px;font-size:16px;font-weight:500;cursor:pointer;font-family:inherit;width:100%;max-width:280px;justify-content:center;transition:opacity .15s}
+.google-btn:active{opacity:.8}
+.google-btn svg{width:20px;height:20px;flex-shrink:0}
 
-  /* STATS */
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px 16px; }
-  .stat { background: var(--bg2); border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; border: 0.5px solid var(--border); }
-  .stat-val { font-size: 28px; font-weight: 700; line-height: 1; }
-  .stat-lbl { font-size: 11px; color: var(--text2); margin-top: 3px; }
-  .stat-meta { font-size: 10px; color: var(--text3); margin-top: 1px; }
+/* APP */
+#appScreen{display:none;flex-direction:column;flex:1}
 
-  /* PROGRESS BAR */
-  .prog-section { padding: 0 16px 12px; }
-  .prog-lbl { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
-  .prog-track { background: var(--bg3); border-radius: 100px; height: 10px; overflow: hidden; }
-  .prog-fill { height: 100%; border-radius: 100px; background: var(--green); transition: width .4s ease; }
+/* HEADER */
+.header{padding:16px 16px 0}
+.user-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.user-info{display:flex;align-items:center;gap:8px}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--bg3);object-fit:cover}
+.user-name{font-size:13px;color:var(--text2)}
+.logout-btn{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:inherit}
+.rank-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rank-emblem{width:58px;height:58px;flex-shrink:0}
+.rank-emblem svg{width:58px;height:58px}
+.rank-info{flex:1}
+.rank-name{font-size:20px;font-weight:600;letter-spacing:-0.3px}
+.rank-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.level-dots{display:flex;gap:5px;margin-top:5px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--bg3)}
+.dot.on{background:currentColor}
+.xp-total{text-align:right;flex-shrink:0}
+.xp-total-val{font-size:15px;font-weight:600}
+.xp-total-lbl{font-size:10px;color:var(--text3);margin-top:1px}
+.xp-track{background:var(--bg3);border-radius:100px;height:6px;overflow:hidden;margin:6px 0 3px}
+.xp-fill{height:100%;border-radius:100px;transition:width .6s ease}
+.xp-nums{display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
 
-  /* CTA */
-  .cta-section { padding: 4px 16px 12px; display: flex; flex-direction: column; gap: 8px; }
-  .big-btn {
-    width: 100%; padding: 20px;
-    border-radius: var(--radius);
-    border: none; font-size: 18px; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    color: #fff; background: var(--green);
-    transition: transform .1s, background .15s;
-    user-select: none;
-  }
-  .big-btn:active { transform: scale(0.97); background: var(--green-dark); }
-  .miss-btn {
-    width: 100%; padding: 12px;
-    border-radius: var(--radius-sm);
-    border: 0.5px solid var(--border2);
-    background: transparent; font-size: 13px;
-    cursor: pointer; font-family: inherit; color: var(--text2);
-  }
-  .miss-btn:active { background: var(--bg2); }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 16px}
+.stat{background:var(--bg2);border-radius:var(--radius-sm);padding:10px 8px;text-align:center;border:0.5px solid var(--border)}
+.stat-val{font-size:28px;font-weight:700;line-height:1}
+.stat-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.stat-meta{font-size:10px;color:var(--text3);margin-top:1px}
 
-  /* TABS */
-  .tabs { display: flex; gap: 4px; padding: 0 16px; margin-bottom: 10px; overflow-x: auto; scrollbar-width: none; }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    padding: 6px 14px; border-radius: 100px; font-size: 12px;
-    cursor: pointer; border: 0.5px solid var(--border);
-    background: transparent; color: var(--text2);
-    font-family: inherit; white-space: nowrap; flex-shrink: 0;
-  }
-  .tab.on { background: var(--text); color: #000; border-color: transparent; }
+/* PROGRESS */
+.prog-section{padding:0 16px 12px}
+.prog-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:6px}
+.prog-track{background:var(--bg3);border-radius:100px;height:10px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;background:var(--green);transition:width .4s ease}
 
-  /* PANELS */
-  .panel { display: none; padding: 0 16px 80px; }
-  .panel.on { display: block; }
+/* CTA */
+.cta-section{padding:4px 16px 12px;display:flex;flex-direction:column;gap:8px}
+.big-btn{width:100%;padding:20px;border-radius:var(--radius);border:none;font-size:18px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;color:#fff;background:var(--green);transition:transform .1s,background .15s;user-select:none}
+.big-btn:active{transform:scale(0.97);background:var(--green-dark)}
+.miss-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:transparent;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text2)}
+.miss-btn:active{background:var(--bg2)}
 
-  /* WEEK GRID */
-  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 8px; }
-  .day-cell { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 4px; text-align: center; }
-  .day-cell.done { border-color: var(--green); }
-  .day-cell.fail { border-color: var(--red); }
-  .day-cell.today { border-width: 1.5px; border-color: rgba(255,255,255,0.35); }
-  .day-nm { font-size: 10px; color: var(--text2); }
-  .day-n { font-size: 18px; font-weight: 600; line-height: 1.3; }
-  .day-cell.done .day-n { color: var(--green); }
-  .day-cell.fail .day-n { color: var(--red); }
+/* TABS */
+.tabs{display:flex;gap:4px;padding:0 16px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:6px 14px;border-radius:100px;font-size:12px;cursor:pointer;border:0.5px solid var(--border);background:transparent;color:var(--text2);font-family:inherit;white-space:nowrap;flex-shrink:0}
+.tab.on{background:var(--text);color:#000;border-color:transparent}
 
-  /* LADDER */
-  .ladder-row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--bg2); margin-bottom: 4px; }
-  .ladder-row.here { border-color: rgba(255,255,255,0.3); background: var(--bg3); font-weight: 600; }
-  .ladder-row.past { opacity: 0.28; }
-  .ladder-emblem { width: 34px; height: 34px; flex-shrink: 0; }
-  .ladder-emblem svg { width: 34px; height: 34px; }
+/* PANELS */
+.panel{display:none;padding:0 16px;padding-bottom:max(80px,calc(60px + env(safe-area-inset-bottom)))}
+.panel.on{display:block}
 
-  /* LOG */
-  .log { display: flex; flex-direction: column; gap: 4px; }
-  .log-row { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 12px; background: var(--bg2); border-radius: var(--radius-sm); border: 0.5px solid var(--border); }
-  .pts-p { color: var(--green); font-weight: 600; }
-  .pts-n { color: var(--red); font-weight: 600; }
+/* WEEK */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:8px}
+.day-cell{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 4px;text-align:center}
+.day-cell.done{border-color:var(--green)}.day-cell.fail{border-color:var(--red)}.day-cell.today{border-width:1.5px;border-color:rgba(255,255,255,.35)}
+.day-nm{font-size:10px;color:var(--text2)}.day-n{font-size:18px;font-weight:600;line-height:1.3}
+.day-cell.done .day-n{color:var(--green)}.day-cell.fail .day-n{color:var(--red)}
 
-  /* INFO */
-  .info-box { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px; font-size: 13px; color: var(--text2); line-height: 1.8; }
-  .info-box b { color: var(--text); font-weight: 600; }
+/* LADDER */
+.ladder-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-sm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:4px}
+.ladder-row.here{border-color:rgba(255,255,255,.3);background:var(--bg3);font-weight:600}
+.ladder-row.past{opacity:.28}
+.ladder-emblem{width:34px;height:34px;flex-shrink:0}
+.ladder-emblem svg{width:34px;height:34px}
 
-  /* BANNER */
-  .banner { border-radius: var(--radius-sm); padding: 11px 14px; font-size: 13px; font-weight: 500; margin: 0 16px 10px; display: none; }
-  .banner.up { background: rgba(29,185,84,0.15); border: 0.5px solid rgba(29,185,84,0.4); color: #1DB954; }
-  .banner.down { background: rgba(226,75,74,0.15); border: 0.5px solid rgba(226,75,74,0.4); color: #E24B4A; }
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:4px}
+.lb-row.me{border-color:rgba(255,255,255,.3);background:var(--bg3)}
+.lb-pos{width:20px;font-size:13px;font-weight:700;color:var(--text2);text-align:center;flex-shrink:0}
+.lb-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg3);object-fit:cover;flex-shrink:0}
+.lb-emblem{width:28px;height:28px;flex-shrink:0}
+.lb-emblem svg{width:28px;height:28px}
+.lb-info{flex:1;min-width:0}
+.lb-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-rank{font-size:11px;color:var(--text2)}
+.lb-xp{font-size:13px;font-weight:600;color:var(--green);flex-shrink:0}
 
-  /* RESET */
-  .reset-link { font-size: 11px; color: var(--text3); background: none; border: none; cursor: pointer; font-family: inherit; display: block; text-align: center; padding: 16px; }
+/* LOG */
+.log{display:flex;flex-direction:column;gap:4px}
+.log-row{display:flex;justify-content:space-between;font-size:13px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius-sm);border:0.5px solid var(--border)}
+.pts-p{color:var(--green);font-weight:600}.pts-n{color:var(--red);font-weight:600}
 
-  /* PHONE ICON */
-  .phone-icon { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* INFO */
+.info-box{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;font-size:13px;color:var(--text2);line-height:1.8}
+.info-box b{color:var(--text);font-weight:600}
 
-  /* ANIMATION */
-  .pop { animation: pop .22s ease; }
-  @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.07)} 100%{transform:scale(1)} }
+/* BANNER */
+.banner{border-radius:var(--radius-sm);padding:11px 14px;font-size:13px;font-weight:500;margin:0 16px 10px;display:none}
+.banner.up{background:rgba(29,185,84,.15);border:0.5px solid rgba(29,185,84,.4);color:#1DB954}
+.banner.down{background:rgba(226,75,74,.15);border:0.5px solid rgba(226,75,74,.4);color:#E24B4A}
 
-  /* SAFE AREA */
-  .panel { padding-bottom: max(80px, calc(60px + env(safe-area-inset-bottom))); }
+.reset-link{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:inherit;display:block;text-align:center;padding:16px}
+.phone-icon{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.section-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.loading-txt{text-align:center;color:var(--text3);font-size:13px;padding:2rem 0}
+.pop{animation:pop .22s ease}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.07)}100%{transform:scale(1)}}
 </style>
 </head>
 <body>
 
-<div id="banner" class="banner"></div>
-
-<div class="header">
-  <div class="rank-bar">
-    <div class="rank-emblem" id="rEmblem"></div>
-    <div class="rank-info">
-      <div class="rank-name" id="rName">Ferro IV</div>
-      <div class="level-dots" id="levelDots"></div>
-      <div class="rank-sub" id="rSub">— XP para o próximo</div>
-    </div>
-    <div class="xp-total">
-      <div class="xp-total-val" id="rXP">0</div>
-      <div class="xp-total-lbl">XP total</div>
-    </div>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-logo">📞</div>
+  <div>
+    <div class="login-title">Call Game</div>
+    <div class="login-sub" style="margin-top:8px">Gamifique sua prospecção.<br>Suba de elo. Bata seus amigos.</div>
   </div>
-  <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
-  <div class="xp-nums"><span id="xpA">0</span><span id="xpB">500</span></div>
-</div>
-
-<div class="stats">
-  <div class="stat"><div class="stat-val" id="todayN">0</div><div class="stat-lbl">Hoje</div><div class="stat-meta">meta: 20</div></div>
-  <div class="stat"><div class="stat-val" id="weekN">0</div><div class="stat-lbl">Semana</div><div class="stat-meta">meta: 100</div></div>
-  <div class="stat"><div class="stat-val" id="streakN">0</div><div class="stat-lbl">🔥 Sequência</div><div class="stat-meta">dias</div></div>
-</div>
-
-<div class="prog-section">
-  <div class="prog-lbl"><span>Meta do dia</span><span id="progTxt">0 / 20</span></div>
-  <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-</div>
-
-<div class="cta-section">
-  <button class="big-btn" id="mainBtn" onclick="doCall()">
-    <svg class="phone-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .4h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.19a16 16 0 006.29 6.29l1.13-1.14a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-    Ligação realizada
+  <button class="google-btn" onclick="loginGoogle()">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+    Entrar com Google
   </button>
-  <button class="miss-btn" onclick="missDay()">✕ &nbsp;Encerrar dia sem bater meta</button>
 </div>
 
-<div class="tabs">
-  <button class="tab on" onclick="sw('semana',this)">Semana</button>
-  <button class="tab" onclick="sw('ladder',this)">ELO</button>
-  <button class="tab" onclick="sw('regras',this)">Regras</button>
-  <button class="tab" onclick="sw('hist',this)">Histórico</button>
-</div>
+<!-- APP -->
+<div id="appScreen">
+  <div id="banner" class="banner"></div>
 
-<div id="panel-semana" class="panel on">
-  <div class="week-grid" id="weekGrid"></div>
-</div>
-
-<div id="panel-ladder" class="panel">
-  <div id="ladderEl"></div>
-</div>
-
-<div id="panel-regras" class="panel">
-  <div class="info-box">
-    <b>Ganhos de XP</b><br>
-    • Cada ligação = <b>+3 XP</b><br>
-    • Bater 20/dia = <b>+80 XP bônus</b><br>
-    • Sequência de 5 dias seguidos = <b>+150 XP</b><br>
-    • Semana perfeita (100 contatos) = <b>+400 XP</b><br><br>
-    <b>Penalidades</b><br>
-    • Não bater meta = <b>−60% do potencial (~−100 XP)</b><br>
-    • Sequência zerada a cada dia perdido<br>
-    • Rebaixamento automático se XP cair do piso<br><br>
-    <b>Tempo estimado sendo consistente</b><br>
-    • Ferro → Bronze: 1–2 semanas<br>
-    • Bronze → Prata: 1–2 meses<br>
-    • Prata → Ouro: 2–4 meses<br>
-    • Ouro → Platina: 4–6 meses<br>
-    • Platina → Diamante: 6–9 meses<br>
-    • Diamante → Imortal: 9–14 meses<br>
-    • Imortal → Radiante: 18+ meses
+  <div class="header">
+    <div class="user-row">
+      <div class="user-info">
+        <img id="userAvatar" class="user-avatar" src="" alt="">
+        <span id="userName" class="user-name"></span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
+    </div>
+    <div class="rank-bar">
+      <div class="rank-emblem" id="rEmblem"></div>
+      <div class="rank-info">
+        <div class="rank-name" id="rName">Ferro IV</div>
+        <div class="level-dots" id="levelDots"></div>
+        <div class="rank-sub" id="rSub">— XP para o próximo</div>
+      </div>
+      <div class="xp-total">
+        <div class="xp-total-val" id="rXP">0</div>
+        <div class="xp-total-lbl">XP total</div>
+      </div>
+    </div>
+    <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    <div class="xp-nums"><span id="xpA">0</span><span id="xpB">500</span></div>
   </div>
-  <button class="reset-link" onclick="if(confirm('Resetar todo o progresso?'))resetAll()">⟳ Resetar progresso</button>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="todayN">0</div><div class="stat-lbl">Hoje</div><div class="stat-meta">meta: 20</div></div>
+    <div class="stat"><div class="stat-val" id="weekN">0</div><div class="stat-lbl">Semana</div><div class="stat-meta">meta: 100</div></div>
+    <div class="stat"><div class="stat-val" id="streakN">0</div><div class="stat-lbl">🔥 Sequência</div><div class="stat-meta">dias</div></div>
+  </div>
+
+  <div class="prog-section">
+    <div class="prog-lbl"><span>Meta do dia</span><span id="progTxt">0 / 20</span></div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="cta-section">
+    <button class="big-btn" id="mainBtn" onclick="doCall()">
+      <svg class="phone-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .4h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.19a16 16 0 006.29 6.29l1.13-1.14a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      Ligação realizada
+    </button>
+    <button class="miss-btn" onclick="missDay()">✕ &nbsp;Encerrar dia sem bater meta</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="sw('semana',this)">Semana</button>
+    <button class="tab" onclick="sw('ladder',this)">ELO</button>
+    <button class="tab" onclick="sw('amigos',this)">🏆 Ranking</button>
+    <button class="tab" onclick="sw('regras',this)">Regras</button>
+    <button class="tab" onclick="sw('hist',this)">Histórico</button>
+  </div>
+
+  <div id="panel-semana" class="panel on">
+    <div class="week-grid" id="weekGrid"></div>
+  </div>
+
+  <div id="panel-ladder" class="panel">
+    <div id="ladderEl"></div>
+  </div>
+
+  <div id="panel-amigos" class="panel">
+    <div class="section-title">Ranking geral</div>
+    <div id="leaderboardEl"><div class="loading-txt">Carregando...</div></div>
+  </div>
+
+  <div id="panel-regras" class="panel">
+    <div class="info-box">
+      <b>Ganhos de XP</b><br>
+      • Cada ligação = <b>+3 XP</b><br>
+      • Bater 20/dia = <b>+80 XP bônus</b><br>
+      • Sequência de 5 dias = <b>+150 XP</b><br>
+      • Semana perfeita (100 contatos) = <b>+400 XP</b><br><br>
+      <b>Penalidades</b><br>
+      • Não bater meta = <b>−60% do potencial (~−100 XP)</b><br>
+      • Sequência zerada a cada dia perdido<br>
+      • Rebaixamento automático se XP cair do piso<br><br>
+      <b>Tempo estimado sendo consistente</b><br>
+      • Ferro → Bronze: 1–2 semanas<br>
+      • Bronze → Prata: 1–2 meses<br>
+      • Prata → Ouro: 2–4 meses<br>
+      • Ouro → Platina: 4–6 meses<br>
+      • Platina → Diamante: 6–9 meses<br>
+      • Diamante → Imortal: 9–14 meses<br>
+      • Imortal → Radiante: 18+ meses
+    </div>
+    <button class="reset-link" onclick="if(confirm('Resetar todo o seu progresso?'))resetAll()">⟳ Resetar meu progresso</button>
+  </div>
+
+  <div id="panel-hist" class="panel">
+    <div class="log" id="logEl"></div>
+  </div>
 </div>
 
-<div id="panel-hist" class="panel">
-  <div class="log" id="logEl"></div>
-</div>
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<script>
-function emblemSVG(tierName, divIdx, size) {
-  size = size || 56;
-  const cx = size/2, cy = size/2, s = size;
-  const bright = [0.42, 0.6, 0.78, 1.0][divIdx];
-  const coreAlpha = [0, 0.4, 0.7, 1.0][divIdx];
-  const sw = size > 40 ? 1.5 : 1;
+const firebaseConfig = {
+  apiKey: "AIzaSyCUooFBfuiCUW2-bop9lHTELGNt6J4q1QE",
+  authDomain: "call-game-b4b35.firebaseapp.com",
+  projectId: "call-game-b4b35",
+  storageBucket: "call-game-b4b35.firebasestorage.app",
+  messagingSenderId: "684202435575",
+  appId: "1:684202435575:web:630c41981fabd56f3ac4f2",
+  measurementId: "G-N267KLD0X9"
+};
 
-  function pts(n, r, cx, cy, offset) {
-    offset = offset || -90;
-    return Array.from({length:n},(_,i)=>{
-      const a=(i*(360/n)+offset)*Math.PI/180;
-      return (cx+r*Math.cos(a))+','+(cy+r*Math.sin(a));
-    }).join(' ');
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let userState = null;
+let lbUnsub = null;
+
+// ── AUTH ──────────────────────────────────────────────
+window.loginGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e) { alert('Erro ao entrar: ' + e.message); }
+};
+
+window.doLogout = async () => {
+  if(!confirm('Sair?')) return;
+  if(lbUnsub) lbUnsub();
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, async (user) => {
+  if(user) {
+    currentUser = user;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'flex';
+    document.getElementById('userAvatar').src = user.photoURL || '';
+    document.getElementById('userName').textContent = user.displayName?.split(' ')[0] || 'Usuário';
+    await loadState();
+    render();
+    startLeaderboard();
+  } else {
+    currentUser = null;
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appScreen').style.display = 'none';
   }
-  function starPts(n, r1, r2, cx, cy) {
-    return Array.from({length:n*2},(_,i)=>{
-      const a=(i*(360/(n*2))-90)*Math.PI/180;
-      const r = i%2===0?r1:r2;
-      return (cx+r*Math.cos(a))+','+(cy+r*Math.sin(a));
-    }).join(' ');
+});
+
+// ── FIRESTORE ─────────────────────────────────────────
+async function loadState() {
+  const ref = doc(db, 'users', currentUser.uid);
+  const snap = await getDoc(ref);
+  if(snap.exists()) {
+    userState = snap.data();
+  } else {
+    userState = {xp:0,log:[],week:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null},todayKey:null,todayCount:0,streak:0,missedToday:false,weeklyTotal:0,weekKey:null,displayName:currentUser.displayName,photoURL:currentUser.photoURL};
+    await saveState();
   }
-
-  const shapes = {
-    Ferro: `
-      <polygon points="${pts(6,s*.45,cx,cy)}" fill="rgba(60,60,60,${bright})" stroke="rgba(158,158,158,${bright})" stroke-width="${sw}"/>
-      <polygon points="${pts(6,s*.33,cx,cy)}" fill="rgba(20,20,20,${bright*.9})" stroke="rgba(110,110,110,${bright})" stroke-width="${sw*.7}"/>
-      ${coreAlpha>0?`<line x1="${cx}" y1="${cy-s*.22}" x2="${cx}" y2="${cy-.22*s+s*.1}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/>
-      <line x1="${cx}" y1="${cy+s*.12}" x2="${cx}" y2="${cy+s*.22}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/>
-      <line x1="${cx-s*.22}" y1="${cy}" x2="${cx-s*.12}" y2="${cy}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/>
-      <line x1="${cx+s*.12}" y1="${cy}" x2="${cx+s*.22}" y2="${cy}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="none" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/>`:''}`,
-
-    Bronze: `
-      <polygon points="${starPts(6,s*.46,s*.32,cx,cy)}" fill="rgba(80,45,10,${bright})" stroke="rgba(205,127,50,${bright})" stroke-width="${sw}"/>
-      <polygon points="${starPts(6,s*.35,s*.23,cx,cy)}" fill="rgba(30,15,3,${bright*.9})" stroke="rgba(160,90,30,${bright})" stroke-width="${sw*.7}"/>
-      ${coreAlpha>0?`<circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="rgba(255,180,80,${coreAlpha*.6})" stroke="rgba(255,210,120,${coreAlpha})" stroke-width="${sw}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(255,220,150,${coreAlpha})"/>`:''}`,
-
-    Prata: `
-      <polygon points="${starPts(7,s*.46,s*.33,cx,cy)}" fill="rgba(50,65,72,${bright})" stroke="rgba(176,190,197,${bright})" stroke-width="${sw}"/>
-      <polygon points="${starPts(7,s*.35,s*.24,cx,cy)}" fill="rgba(15,22,26,${bright*.9})" stroke="rgba(120,145,155,${bright})" stroke-width="${sw*.7}"/>
-      ${coreAlpha>0?`<polygon points="${pts(5,s*.12,cx,cy)}" fill="rgba(210,225,232,${coreAlpha*.7})" stroke="rgba(240,248,255,${coreAlpha})" stroke-width="${sw*.6}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(240,248,255,${coreAlpha})"/>`:''}`,
-
-    Ouro: `
-      <polygon points="${starPts(8,s*.47,s*.35,cx,cy)}" fill="rgba(80,50,0,${bright})" stroke="rgba(255,215,0,${bright})" stroke-width="${sw}"/>
-      <polygon points="${starPts(8,s*.36,s*.26,cx,cy)}" fill="rgba(28,17,0,${bright*.9})" stroke="rgba(200,150,0,${bright})" stroke-width="${sw*.7}"/>
-      ${coreAlpha>0?`<polygon points="${pts(5,s*.13,cx,cy)}" fill="rgba(255,235,80,${coreAlpha*.7})" stroke="rgba(255,250,180,${coreAlpha})" stroke-width="${sw}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(255,250,180,${coreAlpha})"/>`:''}`,
-
-    Platina: `
-      <circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(0,40,55,${bright})" stroke="rgba(0,188,212,${bright})" stroke-width="${sw}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.34}" fill="rgba(0,15,22,${bright*.9})" stroke="rgba(0,130,155,${bright})" stroke-width="${sw*.7}"/>
-      <polygon points="${pts(6,s*.43,cx,cy)}" fill="none" stroke="rgba(0,200,225,${bright*.45})" stroke-width="${sw*.7}"/>
-      ${coreAlpha>0?`<polygon points="${pts(6,s*.14,cx,cy)}" fill="rgba(0,200,220,${coreAlpha*.35})" stroke="rgba(160,240,255,${coreAlpha})" stroke-width="${sw}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(160,240,255,${coreAlpha})"/>`:''}`,
-
-    Diamante: `
-      <polygon points="${pts(7,s*.46,cx,cy)}" fill="rgba(22,8,55,${bright})" stroke="rgba(124,77,255,${bright})" stroke-width="${sw}"/>
-      <polygon points="${pts(7,s*.34,cx,cy)}" fill="rgba(8,3,20,${bright*.9})" stroke="rgba(80,40,180,${bright})" stroke-width="${sw*.7}"/>
-      <polygon points="${pts(7,s*.22,cx,cy)}" fill="none" stroke="rgba(140,90,255,${bright*.45})" stroke-width="${sw*.6}"/>
-      ${coreAlpha>0?`<polygon points="${starPts(4,s*.13,s*.07,cx,cy)}" fill="rgba(180,140,255,${coreAlpha*.6})" stroke="rgba(220,200,255,${coreAlpha})" stroke-width="${sw*.7}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(220,200,255,${coreAlpha})"/>`:''}`,
-
-    Imortal: `
-      <circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(45,4,12,${bright})" stroke="rgba(255,23,68,${bright})" stroke-width="${sw}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.35}" fill="rgba(18,2,5,${bright*.95})" stroke="rgba(160,8,35,${bright})" stroke-width="${sw*.7}"/>
-      <polygon points="${starPts(8,s*.28,s*.19,cx,cy)}" fill="rgba(255,23,68,${bright*.2})" stroke="rgba(255,90,110,${bright*.75})" stroke-width="${sw*.7}"/>
-      ${coreAlpha>0?`<path d="M${cx},${cy-s*.15} L${cx+s*.07},${cy+s*.04} L${cx+s*.15},${cy+s*.04} L${cx+s*.04},${cy+s*.14} L${cx+s*.09},${cy+s*.26} L${cx},${cy+s*.17} L${cx-s*.09},${cy+s*.26} L${cx-s*.04},${cy+s*.14} L${cx-s*.15},${cy+s*.04} L${cx-s*.07},${cy+s*.04} Z" fill="rgba(255,50,80,${coreAlpha*.65})" stroke="rgba(255,150,160,${coreAlpha})" stroke-width="${sw*.75}"/>
-      <circle cx="${cx}" cy="${cy+s*.06}" r="${s*.04}" fill="rgba(255,180,180,${coreAlpha})"/>`:''}`,
-
-    Radiante: `
-      <circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(30,20,0,${bright})" stroke="rgba(255,215,0,${bright})" stroke-width="${sw*1.5}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.36}" fill="rgba(15,10,0,${bright*.95})" stroke="rgba(255,140,0,${bright})" stroke-width="${sw}"/>
-      <polygon points="${starPts(8,s*.44,s*.31,cx,cy)}" fill="none" stroke="rgba(255,215,0,${bright*.55})" stroke-width="${sw*.65}"/>
-      <polygon points="${starPts(8,s*.22,s*.14,cx,cy)}" fill="rgba(255,220,50,${bright*.45})" stroke="rgba(255,240,150,${bright})" stroke-width="${sw}"/>
-      <circle cx="${cx}" cy="${cy}" r="${s*.07}" fill="rgba(255,252,200,${bright})"/>`
-  };
-
-  const shape = shapes[tierName] || shapes['Ferro'];
-  return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">${shape}</svg>`;
 }
 
-const TIERS = [
-  {n:'Ferro',   c:'#9E9E9E', t:[500,1000,1600,2300]},
-  {n:'Bronze',  c:'#CD7F32', t:[3000,4000,5200,6600]},
-  {n:'Prata',   c:'#B0BEC5', t:[8000,10000,12500,15500]},
-  {n:'Ouro',    c:'#FFD700', t:[18500,22500,27000,32500]},
-  {n:'Platina', c:'#00BCD4', t:[38500,46000,54500,64500]},
-  {n:'Diamante',c:'#7C4DFF', t:[76000,90000,106000,125000]},
-  {n:'Imortal', c:'#FF1744', t:[147000,172000,200000,232000]},
-  {n:'Radiante',c:'#FFD700', t:[null]},
-];
+async function saveState() {
+  userState.displayName = currentUser.displayName;
+  userState.photoURL = currentUser.photoURL;
+  userState.updatedAt = Date.now();
+  await setDoc(doc(db, 'users', currentUser.uid), userState);
+}
 
-function gs(){const s=localStorage.getItem('elt6');if(s)return JSON.parse(s);return{xp:0,log:[],week:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null},todayKey:null,todayCount:0,streak:0,missedToday:false,weeklyTotal:0,weekKey:null};}
-function ss(st){localStorage.setItem('elt6',JSON.stringify(st));}
+function startLeaderboard() {
+  if(lbUnsub) lbUnsub();
+  lbUnsub = onSnapshot(collection(db, 'users'), (snap) => {
+    const players = [];
+    snap.forEach(d => players.push({id: d.id, ...d.data()}));
+    players.sort((a,b) => (b.xp||0) - (a.xp||0));
+    renderLeaderboard(players);
+  });
+}
+
+// ── GAME LOGIC ────────────────────────────────────────
 function todayKey(){return new Date().toISOString().split('T')[0];}
 function dayKey(){return['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date().getDay()];}
 function weekKey(){const d=new Date();return d.getFullYear()+'-W'+Math.ceil((((d-new Date(d.getFullYear(),0,1))/86400000)+new Date(d.getFullYear(),0,1).getDay()+1)/7);}
+
+window.doCall = async () => {
+  if(!userState) return;
+  const tk=todayKey(),wk=weekKey();
+  if(userState.todayKey!==tk){userState.todayCount=0;userState.todayKey=tk;userState.missedToday=false;}
+  if(userState.weekKey!==wk){userState.weeklyTotal=0;userState.weekKey=wk;userState.week={Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null};}
+  if(userState.missedToday){alert('Dia encerrado. Volte amanhã! 💪');return;}
+
+  const prevR=getRank(userState.xp);
+  userState.todayCount++;
+  const dk=dayKey();
+  userState.week[dk]=(userState.week[dk]||0)+1;
+  userState.weeklyTotal=(userState.weeklyTotal||0)+1;
+
+  let xpGain=3,desc=`📞 Ligação #${userState.todayCount}`;
+  if(userState.todayCount===20){
+    xpGain+=80;desc='🎯 Meta do dia atingida!';
+    userState.streak=(userState.streak||0)+1;
+    if(userState.streak%5===0){xpGain+=150;desc=`🔥 ${userState.streak} dias seguidos! (bônus)`;}
+  }
+  if(userState.weeklyTotal===100){xpGain+=400;desc='🏆 Semana perfeita! (bônus)';}
+
+  userState.xp+=xpGain;
+  if(!userState.log) userState.log=[];
+  userState.log.push({desc,pts:xpGain,date:tk});
+  if(userState.log.length>60) userState.log=userState.log.slice(-60);
+
+  const newR=getRank(userState.xp);
+  if(newR.ti>prevR.ti||(newR.ti===prevR.ti&&newR.di<prevR.di)){
+    showBanner(`⬆️ Promovido para ${newR.fullName}!`,'up');
+    userState.log.push({desc:`⬆️ Promovido para ${newR.fullName}!`,pts:0,date:tk});
+  }
+  await saveState();
+  document.getElementById('mainBtn').classList.add('pop');
+  setTimeout(()=>document.getElementById('mainBtn').classList.remove('pop'),220);
+  render();
+};
+
+window.missDay = async () => {
+  if(!userState) return;
+  const tk=todayKey(),wk=weekKey();
+  if(userState.todayKey!==tk){userState.todayCount=0;userState.todayKey=tk;}
+  if(userState.weekKey!==wk){userState.weeklyTotal=0;userState.weekKey=wk;}
+  if(userState.missedToday){alert('Já registrado para hoje.');return;}
+  if(!confirm('Confirmar encerramento sem meta? Penalidade aplicada e sequência zerada.'))return;
+
+  const prevR=getRank(userState.xp);
+  const done=userState.todayCount||0;
+  const penalty=-Math.round(((20-done)*3+80)*0.6);
+  userState.xp=Math.max(0,userState.xp+penalty);
+  userState.missedToday=true;userState.streak=0;
+  userState.week[dayKey()]=done;
+  if(!userState.log) userState.log=[];
+  userState.log.push({desc:'❌ Dia encerrado sem meta',pts:penalty,date:tk});
+
+  const newR=getRank(userState.xp);
+  if(newR.ti<prevR.ti||(newR.ti===prevR.ti&&newR.di>prevR.di)){
+    showBanner(`⬇️ Rebaixado para ${newR.fullName}`,'down');
+    userState.log.push({desc:`⬇️ Rebaixado para ${newR.fullName}`,pts:0,date:tk});
+  }
+  await saveState();
+  render();
+};
+
+window.resetAll = async () => {
+  userState={xp:0,log:[],week:{Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null},todayKey:null,todayCount:0,streak:0,missedToday:false,weeklyTotal:0,weekKey:null};
+  await saveState();
+  render();
+};
+
+// ── RENDER ────────────────────────────────────────────
+const TIERS=[
+  {n:'Ferro',   c:'#9E9E9E',t:[500,1000,1600,2300]},
+  {n:'Bronze',  c:'#CD7F32',t:[3000,4000,5200,6600]},
+  {n:'Prata',   c:'#B0BEC5',t:[8000,10000,12500,15500]},
+  {n:'Ouro',    c:'#FFD700',t:[18500,22500,27000,32500]},
+  {n:'Platina', c:'#00BCD4',t:[38500,46000,54500,64500]},
+  {n:'Diamante',c:'#7C4DFF',t:[76000,90000,106000,125000]},
+  {n:'Imortal', c:'#FF1744',t:[147000,172000,200000,232000]},
+  {n:'Radiante',c:'#FFD700',t:[null]},
+];
 
 function getRank(xp){
   for(let t=0;t<TIERS.length;t++){
@@ -341,94 +423,40 @@ function getRank(xp){
   }
 }
 
-function doCall(){
-  const st=gs();
-  const tk=todayKey(),wk=weekKey();
-  if(st.todayKey!==tk){st.todayCount=0;st.todayKey=tk;st.missedToday=false;}
-  if(st.weekKey!==wk){st.weeklyTotal=0;st.weekKey=wk;st.week={Mon:null,Tue:null,Wed:null,Thu:null,Fri:null,Sat:null,Sun:null};}
-  if(st.missedToday){alert('Dia encerrado. Volte amanhã! 💪');return;}
-
-  const prevR=getRank(st.xp);
-  st.todayCount++;
-  const dk=dayKey();
-  st.week[dk]=(st.week[dk]||0)+1;
-  st.weeklyTotal=(st.weeklyTotal||0)+1;
-
-  let xpGain=3,desc=`📞 Ligação #${st.todayCount}`;
-  if(st.todayCount===20){
-    xpGain+=80;desc='🎯 Meta do dia atingida!';
-    st.streak=(st.streak||0)+1;
-    if(st.streak%5===0){xpGain+=150;desc=`🔥 ${st.streak} dias seguidos! (bônus)`;}
-  }
-  if(st.weeklyTotal===100){xpGain+=400;desc='🏆 Semana perfeita! (bônus)';}
-
-  st.xp+=xpGain;
-  st.log.push({desc,pts:xpGain,date:tk});
-
-  const newR=getRank(st.xp);
-  if(newR.ti>prevR.ti||(newR.ti===prevR.ti&&newR.di<prevR.di)){
-    showBanner(`⬆️ Promovido para ${newR.fullName}!`,'up');
-    st.log.push({desc:`⬆️ Promovido para ${newR.fullName}!`,pts:0,date:tk});
-  }
-  ss(st);
-  document.getElementById('mainBtn').classList.add('pop');
-  setTimeout(()=>document.getElementById('mainBtn').classList.remove('pop'),220);
-  render();
+function emblemSVG(tierName,divIdx,size){
+  size=size||56;const cx=size/2,cy=size/2,s=size;
+  const bright=[0.42,0.6,0.78,1.0][divIdx];
+  const coreAlpha=[0,0.4,0.7,1.0][divIdx];
+  const sw=size>40?1.5:1;
+  function pts(n,r,cx,cy,off){off=off||-90;return Array.from({length:n},(_,i)=>{const a=(i*(360/n)+off)*Math.PI/180;return(cx+r*Math.cos(a))+','+(cy+r*Math.sin(a))}).join(' ')}
+  function star(n,r1,r2,cx,cy){return Array.from({length:n*2},(_,i)=>{const a=(i*(360/(n*2))-90)*Math.PI/180;const r=i%2===0?r1:r2;return(cx+r*Math.cos(a))+','+(cy+r*Math.sin(a))}).join(' ')}
+  const shapes={
+    Ferro:`<polygon points="${pts(6,s*.45,cx,cy)}" fill="rgba(60,60,60,${bright})" stroke="rgba(158,158,158,${bright})" stroke-width="${sw}"/><polygon points="${pts(6,s*.33,cx,cy)}" fill="rgba(20,20,20,${bright*.9})" stroke="rgba(110,110,110,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<line x1="${cx}" y1="${cy-s*.22}" x2="${cx}" y2="${cy-s*.12}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><line x1="${cx}" y1="${cy+s*.12}" x2="${cx}" y2="${cy+s*.22}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><line x1="${cx-s*.22}" y1="${cy}" x2="${cx-s*.12}" y2="${cy}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><line x1="${cx+s*.12}" y1="${cy}" x2="${cx+s*.22}" y2="${cy}" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="none" stroke="rgba(200,200,200,${coreAlpha})" stroke-width="${sw}"/>`:''}`,
+    Bronze:`<polygon points="${star(6,s*.46,s*.32,cx,cy)}" fill="rgba(80,45,10,${bright})" stroke="rgba(205,127,50,${bright})" stroke-width="${sw}"/><polygon points="${star(6,s*.35,s*.23,cx,cy)}" fill="rgba(30,15,3,${bright*.9})" stroke="rgba(160,90,30,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<circle cx="${cx}" cy="${cy}" r="${s*.1}" fill="rgba(255,180,80,${coreAlpha*.6})" stroke="rgba(255,210,120,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(255,220,150,${coreAlpha})"/>`:''}`,
+    Prata:`<polygon points="${star(7,s*.46,s*.33,cx,cy)}" fill="rgba(50,65,72,${bright})" stroke="rgba(176,190,197,${bright})" stroke-width="${sw}"/><polygon points="${star(7,s*.35,s*.24,cx,cy)}" fill="rgba(15,22,26,${bright*.9})" stroke="rgba(120,145,155,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<polygon points="${pts(5,s*.12,cx,cy)}" fill="rgba(210,225,232,${coreAlpha*.7})" stroke="rgba(240,248,255,${coreAlpha})" stroke-width="${sw*.6}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(240,248,255,${coreAlpha})"/>`:''}`,
+    Ouro:`<polygon points="${star(8,s*.47,s*.35,cx,cy)}" fill="rgba(80,50,0,${bright})" stroke="rgba(255,215,0,${bright})" stroke-width="${sw}"/><polygon points="${star(8,s*.36,s*.26,cx,cy)}" fill="rgba(28,17,0,${bright*.9})" stroke="rgba(200,150,0,${bright})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<polygon points="${pts(5,s*.13,cx,cy)}" fill="rgba(255,235,80,${coreAlpha*.7})" stroke="rgba(255,250,180,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(255,250,180,${coreAlpha})"/>`:''}`,
+    Platina:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(0,40,55,${bright})" stroke="rgba(0,188,212,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.34}" fill="rgba(0,15,22,${bright*.9})" stroke="rgba(0,130,155,${bright})" stroke-width="${sw*.7}"/><polygon points="${pts(6,s*.43,cx,cy)}" fill="none" stroke="rgba(0,200,225,${bright*.45})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<polygon points="${pts(6,s*.14,cx,cy)}" fill="rgba(0,200,220,${coreAlpha*.35})" stroke="rgba(160,240,255,${coreAlpha})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.05}" fill="rgba(160,240,255,${coreAlpha})"/>`:''}`,
+    Diamante:`<polygon points="${pts(7,s*.46,cx,cy)}" fill="rgba(22,8,55,${bright})" stroke="rgba(124,77,255,${bright})" stroke-width="${sw}"/><polygon points="${pts(7,s*.34,cx,cy)}" fill="rgba(8,3,20,${bright*.9})" stroke="rgba(80,40,180,${bright})" stroke-width="${sw*.7}"/><polygon points="${pts(7,s*.22,cx,cy)}" fill="none" stroke="rgba(140,90,255,${bright*.45})" stroke-width="${sw*.6}"/>${coreAlpha>0?`<polygon points="${star(4,s*.13,s*.07,cx,cy)}" fill="rgba(180,140,255,${coreAlpha*.6})" stroke="rgba(220,200,255,${coreAlpha})" stroke-width="${sw*.7}"/><circle cx="${cx}" cy="${cy}" r="${s*.04}" fill="rgba(220,200,255,${coreAlpha})"/>`:''}`,
+    Imortal:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(45,4,12,${bright})" stroke="rgba(255,23,68,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.35}" fill="rgba(18,2,5,${bright*.95})" stroke="rgba(160,8,35,${bright})" stroke-width="${sw*.7}"/><polygon points="${star(8,s*.28,s*.19,cx,cy)}" fill="rgba(255,23,68,${bright*.2})" stroke="rgba(255,90,110,${bright*.75})" stroke-width="${sw*.7}"/>${coreAlpha>0?`<path d="M${cx},${cy-s*.15} L${cx+s*.07},${cy+s*.04} L${cx+s*.15},${cy+s*.04} L${cx+s*.04},${cy+s*.14} L${cx+s*.09},${cy+s*.26} L${cx},${cy+s*.17} L${cx-s*.09},${cy+s*.26} L${cx-s*.04},${cy+s*.14} L${cx-s*.15},${cy+s*.04} L${cx-s*.07},${cy+s*.04} Z" fill="rgba(255,50,80,${coreAlpha*.65})" stroke="rgba(255,150,160,${coreAlpha})" stroke-width="${sw*.75}"/><circle cx="${cx}" cy="${cy+s*.06}" r="${s*.04}" fill="rgba(255,180,180,${coreAlpha})"/>`:''}`,
+    Radiante:`<circle cx="${cx}" cy="${cy}" r="${s*.46}" fill="rgba(30,20,0,${bright})" stroke="rgba(255,215,0,${bright})" stroke-width="${sw*1.5}"/><circle cx="${cx}" cy="${cy}" r="${s*.36}" fill="rgba(15,10,0,${bright*.95})" stroke="rgba(255,140,0,${bright})" stroke-width="${sw}"/><polygon points="${star(8,s*.44,s*.31,cx,cy)}" fill="none" stroke="rgba(255,215,0,${bright*.55})" stroke-width="${sw*.65}"/><polygon points="${star(8,s*.22,s*.14,cx,cy)}" fill="rgba(255,220,50,${bright*.45})" stroke="rgba(255,240,150,${bright})" stroke-width="${sw}"/><circle cx="${cx}" cy="${cy}" r="${s*.07}" fill="rgba(255,252,200,${bright})"/>`,
+  };
+  return`<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">${shapes[tierName]||shapes['Ferro']}</svg>`;
 }
-
-function missDay(){
-  const st=gs();
-  const tk=todayKey(),wk=weekKey();
-  if(st.todayKey!==tk){st.todayCount=0;st.todayKey=tk;}
-  if(st.weekKey!==wk){st.weeklyTotal=0;st.weekKey=wk;}
-  if(st.missedToday){alert('Já registrado para hoje.');return;}
-  if(!confirm('Confirmar encerramento sem meta? Penalidade aplicada e sequência zerada.'))return;
-
-  const prevR=getRank(st.xp);
-  const done=st.todayCount||0;
-  const penalty=-Math.round(((20-done)*3+80)*0.6);
-  st.xp=Math.max(0,st.xp+penalty);
-  st.missedToday=true;st.streak=0;
-  st.week[dayKey()]=done;
-  st.log.push({desc:'❌ Dia encerrado sem meta',pts:penalty,date:tk});
-
-  const newR=getRank(st.xp);
-  if(newR.ti<prevR.ti||(newR.ti===prevR.ti&&newR.di>prevR.di)){
-    showBanner(`⬇️ Rebaixado para ${newR.fullName}`,'down');
-    st.log.push({desc:`⬇️ Rebaixado para ${newR.fullName}`,pts:0,date:tk});
-  }
-  ss(st);render();
-}
-
-function showBanner(msg,type){
-  const b=document.getElementById('banner');
-  b.textContent=msg;b.className='banner '+type;b.style.display='block';
-  setTimeout(()=>{b.style.display='none'},4000);
-}
-
-function sw(name,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('panel-'+name).classList.add('on');
-}
-
-function resetAll(){localStorage.removeItem('elt6');render();}
 
 function render(){
-  const st=gs();
+  if(!userState) return;
   const tk=todayKey(),wk=weekKey();
-  if(st.todayKey!==tk)st.todayCount=0;
-  if(st.weekKey!==wk)st.weeklyTotal=0;
+  if(userState.todayKey!==tk) userState.todayCount=0;
+  if(userState.weekKey!==wk) userState.weeklyTotal=0;
 
-  const r=getRank(st.xp);
+  const r=getRank(userState.xp||0);
   document.getElementById('rEmblem').innerHTML=emblemSVG(r.tierName,r.di,58);
   document.getElementById('rName').textContent=r.fullName;
-  document.getElementById('rXP').textContent=st.xp.toLocaleString('pt-BR');
+  document.getElementById('rXP').textContent=(userState.xp||0).toLocaleString('pt-BR');
   document.getElementById('xpFill').style.cssText=`width:${r.pct}%;background:${r.color}`;
   document.getElementById('xpA').textContent=(r.floor||0).toLocaleString('pt-BR');
   document.getElementById('xpB').textContent=r.ceil?r.ceil.toLocaleString('pt-BR'):'∞';
-  document.getElementById('rSub').textContent=r.ceil?(r.ceil-st.xp).toLocaleString('pt-BR')+' XP para o próximo':'Posto máximo 🔥';
+  document.getElementById('rSub').textContent=r.ceil?(r.ceil-(userState.xp||0)).toLocaleString('pt-BR')+' XP para o próximo':'Posto máximo 🔥';
 
   const dotsEl=document.getElementById('levelDots');
   dotsEl.style.color=r.color;
@@ -439,11 +467,10 @@ function render(){
     dotsEl.innerHTML=`<div class="dot on" style="background:#FFD700;width:26px;border-radius:3px"></div>`;
   }
 
-  document.getElementById('todayN').textContent=st.todayCount||0;
-  document.getElementById('weekN').textContent=st.weeklyTotal||0;
-  document.getElementById('streakN').textContent=st.streak||0;
-
-  const tc=st.todayCount||0;
+  const tc=userState.todayCount||0;
+  document.getElementById('todayN').textContent=tc;
+  document.getElementById('weekN').textContent=userState.weeklyTotal||0;
+  document.getElementById('streakN').textContent=userState.streak||0;
   document.getElementById('progFill').style.width=Math.min(100,Math.round((tc/20)*100))+'%';
   document.getElementById('progTxt').textContent=tc+' / 20';
 
@@ -451,7 +478,7 @@ function render(){
   const dayLbls=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
   const todayDk=dayKey();
   document.getElementById('weekGrid').innerHTML=dayKeys.map((k,i)=>{
-    const v=st.week[k];
+    const v=userState.week?userState.week[k]:null;
     return`<div class="day-cell${v>=20?' done':v!=null&&v<20?' fail':''}${k===todayDk?' today':''}"><div class="day-nm">${dayLbls[i]}</div><div class="day-n">${v!=null?v:'–'}</div></div>`;
   }).join('');
 
@@ -459,14 +486,14 @@ function render(){
   for(let t=TIERS.length-1;t>=0;t--){
     const T=TIERS[t];
     if(t===TIERS.length-1){
-      const isHere=st.xp>=232000;
+      const isHere=(userState.xp||0)>=232000;
       rows.push(`<div class="ladder-row${isHere?' here':''}"><div class="ladder-emblem">${emblemSVG('Radiante',3,34)}</div><div style="flex:1"><div style="font-size:13px">${T.n}</div><div style="font-size:11px;color:var(--text3)">232.000+ XP</div></div>${isHere?'<span style="font-size:11px;color:#1DB954">← você</span>':''}</div>`);
     } else {
       for(let d=T.t.length-1;d>=0;d--){
         const floor=d===0?(t===0?0:TIERS[t-1].t[3]):T.t[d-1];
         const ceil=T.t[d];
-        const isHere=st.xp>=floor&&st.xp<ceil;
-        const isPast=st.xp>=ceil;
+        const isHere=(userState.xp||0)>=floor&&(userState.xp||0)<ceil;
+        const isPast=(userState.xp||0)>=ceil;
         rows.push(`<div class="ladder-row${isHere?' here':''}${isPast?' past':''}"><div class="ladder-emblem">${emblemSVG(T.n,d,34)}</div><div style="flex:1"><div style="font-size:13px">${T.n} ${4-d}</div><div style="font-size:11px;color:var(--text3)">${floor.toLocaleString('pt-BR')} – ${ceil.toLocaleString('pt-BR')} XP</div></div>${isHere?`<span style="font-size:11px;color:#1DB954">← você</span>`:''}</div>`);
       }
     }
@@ -474,11 +501,43 @@ function render(){
   document.getElementById('ladderEl').innerHTML=rows.join('');
 
   const logEl=document.getElementById('logEl');
-  if(!st.log||!st.log.length){logEl.innerHTML='<p style="font-size:13px;color:var(--text3);text-align:center;padding:2rem 0">Nenhum registro ainda.</p>';return;}
-  logEl.innerHTML=[...st.log].reverse().slice(0,60).map(l=>`<div class="log-row"><span>${l.desc}</span><span class="${l.pts>0?'pts-p':l.pts<0?'pts-n':''}">${l.pts>0?'+':''}${l.pts!==0?l.pts+' XP':''}</span></div>`).join('');
+  const log=userState.log||[];
+  if(!log.length){logEl.innerHTML='<p class="loading-txt">Nenhum registro ainda.</p>';return;}
+  logEl.innerHTML=[...log].reverse().slice(0,60).map(l=>`<div class="log-row"><span>${l.desc}</span><span class="${l.pts>0?'pts-p':l.pts<0?'pts-n':''}">${l.pts>0?'+':''}${l.pts!==0?l.pts+' XP':''}</span></div>`).join('');
 }
 
-render();
+function renderLeaderboard(players){
+  const el=document.getElementById('leaderboardEl');
+  if(!players.length){el.innerHTML='<div class="loading-txt">Nenhum jogador ainda.</div>';return;}
+  el.innerHTML=players.map((p,i)=>{
+    const r=getRank(p.xp||0);
+    const isMe=currentUser&&p.id===currentUser.uid;
+    const medals=['🥇','🥈','🥉'];
+    const pos=i<3?medals[i]:`${i+1}`;
+    return`<div class="lb-row${isMe?' me':''}">
+      <div class="lb-pos">${pos}</div>
+      <img class="lb-avatar" src="${p.photoURL||''}" onerror="this.style.display='none'" alt="">
+      <div class="lb-emblem">${emblemSVG(r.tierName,r.di,28)}</div>
+      <div class="lb-info"><div class="lb-name">${p.displayName||'Jogador'}${isMe?' (você)':''}</div><div class="lb-rank">${r.fullName}</div></div>
+      <div class="lb-xp">${(p.xp||0).toLocaleString('pt-BR')} XP</div>
+    </div>`;
+  }).join('');
+}
+
+function showBanner(msg,type){
+  const b=document.getElementById('banner');
+  b.textContent=msg;b.className='banner '+type;b.style.display='block';
+  setTimeout(()=>{b.style.display='none'},4000);
+}
+
+window.sw = (name,el) => {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('panel-'+name).classList.add('on');
+};
+
+window.render = render;
 </script>
 </body>
 </html>
